@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "unistd.h": "c",
+        "system_error": "c",
+        "sdl.h": "c",
+        "stdbool.h": "c",
+        "select.h": "c",
+        "movement.h": "c",
+        "stdlib.h": "c",
+        "memory": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled",
+    "svn.ignoreMissingSvnWarning": true
+}
