@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <errno.h>
 #include "./game.h"
 #include "./client.h"
-#include "./engine.h"
 #include "./net.h"
 #include "./event.h"
 #include "./render.h"
@@ -10,46 +10,52 @@
 #include "./action/placement.h"
 
 const Uint32 SDL_CONFIG = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER;
+const char *SCREEN_TITLE = "Bomberman";
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
-int enter_game_loop(t_engine *engine, t_game *game);
+int enter_game_loop(SDL_Window *window, t_game *game);
 
 int             run_client(const char *address, uint16_t port)
 {
-    t_engine    *engine = NULL;
+    SDL_Window  *window = NULL;
     t_game      *game = NULL;
 
     if (SDL_Init(SDL_CONFIG) < 0) {
         return (EXIT_FAILURE);
     }
-    engine = create_engine();
-    if (!engine) {
-        fprintf(stderr, "Game engine fail to start");
+    window = SDL_CreateWindow(SCREEN_TITLE,
+                              SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                              SCREEN_WIDTH, SCREEN_HEIGHT,
+                              SDL_WINDOW_SHOWN);
+    if (!window) {
+        fprintf(stderr, "Game window fail to start: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }
     game = create_game(address, port);
     if (!game) {
-        fprintf(stderr, "Game instance fail to start");
-        destroy_engine(engine);
+        fprintf(stderr, "Game instance fail to start: %s\n", strerror(errno));
+        SDL_DestroyWindow(window);
         SDL_Quit();
         return (EXIT_FAILURE);
     }
     place_hero(game->env, game->player);
-    if (enter_game_loop(engine, game) < 0) {
-        fprintf(stderr, "Game quit with exception");
-        destroy_engine(engine);
+    if (enter_game_loop(window, game) < 0) {
+        fprintf(stderr, "Game quit with exception: %s\n", strerror(errno));
         destroy_game(game);
+        SDL_DestroyWindow(window);
         SDL_Quit();
         return (EXIT_FAILURE);
     }
-    destroy_engine(engine);
     destroy_game(game);
+    SDL_DestroyWindow(window);
     SDL_Quit();
     return (EXIT_SUCCESS);
 }
 
-int                 enter_game_loop(t_engine *engine, t_game *game)
+int                 enter_game_loop(SDL_Window *window, t_game *game)
 {
-    SDL_Renderer    *renderer = SDL_CreateRenderer(engine->window, -1, 0);
+    SDL_Renderer    *renderer = SDL_CreateRenderer(window, -1, 0);
     e_game_flow     state = GAME_FLOW_RUN;
 
     if (!renderer) {

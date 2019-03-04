@@ -1,7 +1,7 @@
 #pragma once
 
 #include <arpa/inet.h>
-#include "./model/net/socket.h"
+#include "./net/socket.h"
 
 #define MESSAGE_LENGTH 10
 

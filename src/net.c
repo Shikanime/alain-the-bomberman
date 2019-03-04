@@ -8,11 +8,10 @@ int handshake(t_socket *s);
 int handle_inc(t_socket *s, int fd);
 int broadcast_event(t_socket *s, int sender, const char *evt);
 void close_connection(t_socket *s, int fd);
-void new_active_set(t_socket *s);
 
 int await_event(t_socket *s)
 {
-    new_active_set(s);
+    s->read_set = s->active_set;
     if (select(FD_SETSIZE, &s->read_set, NULL, NULL, NULL) < 0) {
         return (-1);
     }
@@ -87,7 +86,7 @@ int         read_from_socket(int fd, char (*buff)[MESSAGE_LENGTH])
     return 0;
 }
 
-int         broadcast_event(t_socket *s, int sender, const char *evt)
+int broadcast_event(t_socket *s, int sender, const char *evt)
 {
     for (int i = 3; i < FD_SETSIZE; i++) {
         if (FD_ISSET(i, &s->active_set)) {
@@ -113,7 +112,3 @@ void send_event(t_socket *socket, const char *command)
     send(socket->fd, command, 10, 0);
 }
 
-void new_active_set(t_socket *s)
-{
-    s->read_set = s->active_set;
-}

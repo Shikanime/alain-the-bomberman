@@ -14,11 +14,11 @@ t_socket        *create_client_socket(const char *address, uint16_t port)
     if (sok) {
         if (allocate_fd(sok, port) < 0) {
             destroy_socket(sok);
-            return (sok);
+            return (NULL);
         }
         if (connect_client(sok, address) < 0) {
             destroy_socket(sok);
-            return (sok);
+            return (NULL);
         }
     }
     return (sok);
@@ -43,11 +43,11 @@ t_socket        *create_server_socket(uint16_t port)
     if (sok) {
         if (allocate_fd(sok, port) < 0) {
             destroy_socket(sok);
-            return (sok);
+            return (NULL);
         }
         if (open_server_conn(sok) < 0) {
             destroy_socket(sok);
-            return (sok);
+            return (NULL);
         }
     }
     return (sok);

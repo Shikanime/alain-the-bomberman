@@ -6,12 +6,12 @@ t_rect      *create_rect(size_t width, size_t height)
 {
     t_rect  *rect = malloc(sizeof(t_rect));
 
-    if (rect) {
-        rect->width = width;
-        rect->height = height;
-    } else {
-        perror("Fail to create rect");
+    if (!rect) {
+        perror("Fail to allocate rect");
+        return (NULL);
     }
+    rect->width = width;
+    rect->height = height;
     return (rect);
 }
 

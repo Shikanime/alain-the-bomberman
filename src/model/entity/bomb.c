@@ -6,19 +6,19 @@ t_bomb      *create_bomb(int x, int y)
 {
     t_bomb  *bomb = malloc(sizeof(t_bomb));
 
-    if (bomb) {
-        bomb->position = create_position(x, y);
-        if (!bomb->position) {
-            destroy_bomb(bomb);
-            return (bomb);
-        }
-        bomb->body = create_rect(BOMB_WIDTH ,BOMB_HEIGHT);
-        if (!bomb->body) {
-            destroy_bomb(bomb);
-            return (bomb);
-        }
-    } else {
+    if (!bomb) {
         perror("Fail to create bomb");
+        return (NULL);
+    }
+    bomb->position = create_position(x, y);
+    if (!bomb->position) {
+        destroy_bomb(bomb);
+        return (NULL);
+    }
+    bomb->body = create_rect(BOMB_WIDTH ,BOMB_HEIGHT);
+    if (!bomb->body) {
+        destroy_bomb(bomb);
+        return (NULL);
     }
     return (bomb);
 }

@@ -13,17 +13,17 @@ t_game      *create_game(const char *address, uint16_t port)
         game->client = create_client_socket(address, port);
         if (!game->client) {
             destroy_game(game);
-            return (game);
+            return (NULL);
         }
         game->player = create_hero(0, 0);
         if (!game->player) {
             destroy_game(game);
-            return (game);
+            return (NULL);
         }
         game->env = create_env();
         if (!game->env) {
             destroy_game(game);
-            return (game);
+            return (NULL);
         }
     }
     return (game);

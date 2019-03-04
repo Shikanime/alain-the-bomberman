@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
-#include "./model/net/socket.h"
+#include "./net/socket.h"
 #include "./server.h"
 #include "./net.h"
 

@@ -9,18 +9,20 @@ t_env       *create_env()
 {
     t_env   *env = malloc(sizeof(t_env));
 
-    if (env) {
-        if (init_env_heros(env) < 0) {
-            destroy_env(env);
-            return (env);
-        }
-        if (init_env_bombs(env) < 0) {
-            destroy_env(env);
-            return (env);
-        }
-        env->sz.width = 640;
-        env->sz.height = 480;
+    if (!env) {
+        perror("Fail to create env");
+        return (NULL);
     }
+    if (init_env_heros(env) < 0) {
+        destroy_env(env);
+        return (NULL);
+    }
+    if (init_env_bombs(env) < 0) {
+        destroy_env(env);
+        return (NULL);
+    }
+    env->sz.width = 640;
+    env->sz.height = 480;
     return (env);
 }
 
