@@ -10,7 +10,9 @@
         "stdlib.h": "c",
         "memory": "c",
         "locale": "c",
-        "string": "c"
+        "string": "c",
+        "texture.h": "c",
+        "string.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "svn.ignoreMissingSvnWarning": true
