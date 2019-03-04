@@ -78,7 +78,7 @@ int         read_from_socket(int fd, char (*buff)[MESSAGE_LENGTH])
     ssize_t n = recv(fd, buff, MESSAGE_LENGTH, 0);
 
     if (n < 0) {
-      return (-1);
+    return (-1);
     }
     if (n == 0) {
         return (-1);
@@ -111,4 +111,3 @@ void send_event(t_socket *socket, const char *command)
 {
     send(socket->fd, command, 10, 0);
 }
-

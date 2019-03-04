@@ -8,7 +8,9 @@
         "select.h": "c",
         "movement.h": "c",
         "stdlib.h": "c",
-        "memory": "c"
+        "memory": "c",
+        "locale": "c",
+        "string": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "svn.ignoreMissingSvnWarning": true

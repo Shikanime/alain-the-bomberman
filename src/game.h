@@ -1,7 +1,7 @@
 #pragma once
 
 #include "./net.h"
-#include "./model/entity/env.h"
+#include "./game/env.h"
 #include "./model/entity/hero.h"
 
 typedef enum {

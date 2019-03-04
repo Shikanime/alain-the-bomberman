@@ -3,4 +3,5 @@
 #include <SDL2/SDL.h>
 #include "../model/entity/bomb.h"
 
-void render_bomb(SDL_Renderer *renderer, t_bomb *bomb);
+SDL_Texture *load_bomb(SDL_Renderer *renderer);
+void        render_bomb(SDL_Renderer *renderer, SDL_Texture *texture, t_bomb *bomb);

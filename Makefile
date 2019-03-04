@@ -12,7 +12,8 @@
 
 OUTNAME := bomberman
 
-ROTDIR := .
+ASSETDIR := assets
+ROOTDIR := .
 DEPDIR := .cache
 OBJDIR := .cache
 OUTDIR := build
@@ -50,24 +51,20 @@ endif
 # Compilation command
 
 .PHONY: all
-all: init $(OUTNAME)
+all: init exec
 
 .PHONY: exec
 exec: $(OUTNAME)
-
-.PHONY: dexec
-dexec: $(OUTNAME)
-	$(SILENCER)docker build -t $(OUTNAME) .
-	$(SILENCER)docker run --rm -it -v "${PWD}":"/usr/src/priv" $(OUTNAME)
+	$(SILENCER)cp -r $(ROOTDIR)/$(ASSETDIR) $(ROOTDIR)/$(OUTDIR)
 
 # Automated compilator
 
 # Compilator files
 
 ifeq ($(TEST_BUILD), 1)
-    SRCS := $(shell find $(ROTDIR)/$(SRCDIR) -name "*.$(TYPE)" -type f | cut -sd / -f 3- | tr '\n' ' ')
+    SRCS := $(shell find $(ROOTDIR)/$(SRCDIR) -name "*.$(TYPE)" -type f | cut -sd / -f 3- | tr '\n' ' ')
 else
-    SRCS := $(shell find $(ROTDIR)/$(SRCDIR) ! -name '*.test.$(TYPE)' -name "*.$(TYPE)" -type f | cut -sd / -f 3- | tr '\n' ' ')
+    SRCS := $(shell find $(ROOTDIR)/$(SRCDIR) ! -name '*.test.$(TYPE)' -name "*.$(TYPE)" -type f | cut -sd / -f 3- | tr '\n' ' ')
 endif
 OBJS := $(patsubst %, $(OBJDIR)/%, $(SRCS:$(TYPE)=o))
 DEPS :=$(patsubst %.$(TYPE), %.d, $(SRCS))
@@ -78,7 +75,7 @@ CFLAGS += -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
 $(OUTNAME): $(OBJS)
-	$(SILENCER)$(CC) $(CFLAGS) -o $(OUTDIR)/$(OUTNAME) $^ -lSDL2 `sdl2-config --cflags --libs`
+	$(SILENCER)$(CC) $(CFLAGS) -o $(OUTDIR)/$(OUTNAME) $^ -lSDL2 `sdl2-config --cflags --libs` -lSDL2_image
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.$(TYPE) $(DEPDIR)/%.d
 	$(SILENCER)mkdir -p $(shell dirname $@)
@@ -89,20 +86,20 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.$(TYPE) $(DEPDIR)/%.d
 
 .PHONY: init
 init:
-	$(SILENCER)mkdir -p $(ROTDIR)/$(SRCDIR)
-	$(SILENCER)mkdir -p $(ROTDIR)/$(OBJDIR)
-	$(SILENCER)mkdir -p $(ROTDIR)/$(HDRDIR)
-	$(SILENCER)mkdir -p $(ROTDIR)/$(OUTDIR)
+	$(SILENCER)mkdir -p $(ROOTDIR)/$(SRCDIR)
+	$(SILENCER)mkdir -p $(ROOTDIR)/$(OBJDIR)
+	$(SILENCER)mkdir -p $(ROOTDIR)/$(HDRDIR)
+	$(SILENCER)mkdir -p $(ROOTDIR)/$(OUTDIR)
 
 .PHONY: clean
 clean:
-	$(SILENCER)$(RM) -r $(ROTDIR)/$(OBJDIR)
-	$(SILENCER)mkdir -p $(ROTDIR)/$(OBJDIR)
+	$(SILENCER)$(RM) -r $(ROOTDIR)/$(OBJDIR)
+	$(SILENCER)mkdir -p $(ROOTDIR)/$(OBJDIR)
 
 .PHONY: fclean
 fclean: clean
-	$(SILENCER)$(RM) -r $(ROTDIR)/$(OUTDIR)
-	$(SILENCER)mkdir -p $(ROTDIR)/$(OUTDIR)
+	$(SILENCER)$(RM) -r $(ROOTDIR)/$(OUTDIR)
+	$(SILENCER)mkdir -p $(ROOTDIR)/$(OUTDIR)
 
 .PHONY: re
 re: fclean all

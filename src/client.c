@@ -6,6 +6,7 @@
 #include "./net.h"
 #include "./event.h"
 #include "./render.h"
+#include "./ressource.h"
 #include "./model/ui/menu.h"
 #include "./action/placement.h"
 
@@ -22,12 +23,17 @@ int             run_client(const char *address, uint16_t port)
     t_game      *game = NULL;
 
     if (SDL_Init(SDL_CONFIG) < 0) {
+        fprintf(stderr, "Could not initialize sdl2: %s\n", SDL_GetError());
+        return (EXIT_FAILURE);
+    }
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        fprintf(stderr, "Could not initialize sdl2_image: %s\n", IMG_GetError());
         return (EXIT_FAILURE);
     }
     window = SDL_CreateWindow(SCREEN_TITLE,
-                              SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                              SCREEN_WIDTH, SCREEN_HEIGHT,
-                              SDL_WINDOW_SHOWN);
+                                SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                SCREEN_WIDTH, SCREEN_HEIGHT,
+                                SDL_WINDOW_SHOWN);
     if (!window) {
         fprintf(stderr, "Game window fail to start: %s\n", strerror(errno));
         return (EXIT_FAILURE);
@@ -55,30 +61,38 @@ int             run_client(const char *address, uint16_t port)
 
 int                 enter_game_loop(SDL_Window *window, t_game *game)
 {
-    SDL_Renderer    *renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_Renderer    *renderer = NULL;
+    t_ressource     *ressource = NULL;
     e_game_flow     state = GAME_FLOW_RUN;
 
+    renderer = SDL_CreateRenderer(window, -1, 0);
     if (!renderer) {
         SDL_DestroyRenderer(renderer);
         return (-1);
     }
+    ressource = create_ressource(renderer);
+    if (!ressource) {
+        SDL_DestroyRenderer(renderer);
+        return (-1);
+    }
     while (state != GAME_FLOW_EXIT) {
+        SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         if (state == GAME_FLOW_MENU) {
             t_menu  *menu = create_menu();
             sub_events(game);
             sub_inputs(&state, game);
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-            SDL_RenderClear(renderer);
             render_menu(renderer, menu);
         } else if (state != GAME_FLOW_SKIP && state != GAME_FLOW_EXIT) {
             sub_events(game);
             sub_inputs(&state, game);
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
-            render_entites(renderer, game->env);
+            render_entites(renderer, ressource, game->env);
         }
         SDL_RenderPresent(renderer);
+    	SDL_Delay(100);
     }
+    destroy_ressource(ressource);
     SDL_DestroyRenderer(renderer);
     return (0);
 }

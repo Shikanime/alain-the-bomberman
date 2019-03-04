@@ -4,14 +4,14 @@
 #include "./render/bomb.h"
 #include "./render/button.h"
 
-void render_entites(SDL_Renderer *renderer, t_env *env)
+void render_entites(SDL_Renderer *renderer, t_ressource *resssource, t_env *env)
 {
     for (size_t i = 0; i < env->hero_nb; i++) {
         render_hero(renderer, env->heros[i]);
     }
 
     for (size_t i = 0; i < env->bomb_nb; i++) {
-        render_bomb(renderer, env->bombs[i]);
+        render_bomb(renderer, resssource->bomb, env->bombs[i]);
     }
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../entity/hero.h"
-#include "../entity/bomb.h"
+#include "../model/entity/hero.h"
+#include "../model/entity/bomb.h"
 
 typedef struct  s_env
 {

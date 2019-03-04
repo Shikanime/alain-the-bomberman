@@ -3,7 +3,7 @@
 #include "./game.h"
 #include "./net.h"
 #include "./model/entity/hero.h"
-#include "./model/entity/env.h"
+#include "./game/env.h"
 
 t_game      *create_game(const char *address, uint16_t port)
 {
@@ -25,6 +25,7 @@ t_game      *create_game(const char *address, uint16_t port)
             destroy_game(game);
             return (NULL);
         }
+
     }
     return (game);
 }
