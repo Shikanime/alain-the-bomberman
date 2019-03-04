@@ -39,12 +39,12 @@ t_game *create_game()
         return (NULL);
     }
     game->state = GAME_MENU;
-    for (size_t y = 0; y < BOARD_HEIGHT; y++) {
-        for (size_t x = 0; x < BOARD_WITDH; x++) {
-            if (x == 0 || y == 0) {
+    for (int y = 0; y < BOARD_HEIGHT; y++) {
+        for (int x = 0; x < BOARD_WITDH; x++) {
+            if (x == 0 || y == 0 || (x + 1) == BOARD_WITDH || (y + 1) == BOARD_HEIGHT) {
                 game->board[y][x] = ENTITY_WALL;
             } else {
-                game->board[y][x] = ENTITY_NONE;
+                game->board[y][x] = ENTITY_GRASS;
             }
         }
     }
@@ -80,24 +80,6 @@ void render_game(t_game *game)
     }
 }
 
-// void render_game(t_game *game)
-// {
-//     for (int y = 0; y < BOARD_HEIGHT; y++) {
-//         for (int x = 0; x < BOARD_WITDH; x++) {
-//             if (game->board[y][x] & ENTITY_BOMB) {
-//                 printf("1 ");
-//             }
-//             if (game->board[y][x] & ENTITY_BOMBERMAN) {
-//                 printf("2 ");
-//             }
-//             printf("0 ");
-//         }
-//         printf("player.x %d player.y %d", game->player.x, game->player.y);
-//         printf("\n");
-//         fflush(stdout);
-//     }
-// }
-
 void input_game(t_game *game)
 {
     while (SDL_PollEvent(&game->event)) {
@@ -129,11 +111,11 @@ void join_game(t_game *game)
     int x = rand() % BOARD_WITDH;
     int y = rand() % BOARD_HEIGHT;
 
-    while (game->board[y][x] != ENTITY_NONE) {
+    while (game->board[y][x] != ENTITY_GRASS) {
         x = rand() % BOARD_WITDH;
         y = rand() % BOARD_HEIGHT;
     }
     game->player.x = x;
     game->player.y = y;
-    game->board[y][x] = ENTITY_BOMBERMAN;
+    game->board[y][x] = ENTITY_GRASS | ENTITY_BOMBERMAN;
 }

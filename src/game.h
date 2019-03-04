@@ -8,21 +8,21 @@
 #define MAX_PLAYER 4
 
 // Screen dimension constants
-#define SCREEN_WIDTH    640
-#define SCREEN_HEIGHT   480
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
 
 // Board dimension
-#define BOARD_CELL_WIDTH    40
-#define BOARD_CELL_HEIGHT   40
-#define BOARD_WITDH         SCREEN_WIDTH  / BOARD_CELL_WIDTH
-#define BOARD_HEIGHT        SCREEN_HEIGHT / BOARD_CELL_HEIGHT
+#define BOARD_CELL_WIDTH 40
+#define BOARD_CELL_HEIGHT 40
+#define BOARD_WITDH 16
+#define BOARD_HEIGHT 12
 
 // Board element
 typedef enum {
-    ENTITY_NONE         = 1 << 0,
-    ENTITY_BOMBERMAN    = 1 << 1,
-    ENTITY_BOMB         = 1 << 2,
-    ENTITY_WALL         = 1 << 3
+    ENTITY_GRASS = 1,
+    ENTITY_WALL = 2,
+    ENTITY_BOMBERMAN = 4,
+    ENTITY_BOMB = 8
 }   e_entity;
 
 typedef e_entity t_board[BOARD_WITDH][BOARD_HEIGHT];
