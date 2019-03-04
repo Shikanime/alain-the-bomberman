@@ -77,7 +77,6 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
     }
     while (state != GAME_FLOW_EXIT) {
         SDL_RenderClear(renderer);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         if (state == GAME_FLOW_MENU) {
             t_menu  *menu = create_menu();
             sub_events(game);
@@ -86,9 +85,9 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
         } else if (state != GAME_FLOW_SKIP && state != GAME_FLOW_EXIT) {
             sub_events(game);
             sub_inputs(&state, game);
-            SDL_RenderClear(renderer);
             render_entites(renderer, ressource, game->env);
         }
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderPresent(renderer);
     	SDL_Delay(100);
     }
