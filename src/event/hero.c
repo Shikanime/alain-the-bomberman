@@ -28,19 +28,19 @@ void dispatch_move_event(SDL_Keycode key, t_hero *hero, t_game *game)
     switch (key) {
         case SDLK_UP:
             move_hero_up(hero, game->env);
-            send_event(game->client, "up       \n");
+            send_event(game->client, "up");
             break;
         case SDLK_DOWN:
             move_hero_down(hero, game->env);
-            send_event(game->client, "down     \n");
+            send_event(game->client, "down");
             break;
         case SDLK_LEFT:
             move_hero_left(hero, game->env);
-            send_event(game->client, "left     \n");
+            send_event(game->client, "left");
             break;
         case SDLK_RIGHT:
             move_hero_right(hero, game->env);
-            send_event(game->client, "right    \n");
+            send_event(game->client, "right");
             break;
     }
 }

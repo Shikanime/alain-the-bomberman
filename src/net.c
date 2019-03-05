@@ -28,10 +28,6 @@ int dispatch_event(t_socket *s)
                 } else {
                     printf("New connection\n");
                 }
-                // TODO: broadcast spawn event
-                // if (broadcast_event(s, i, "spawn") < 0) {
-                //     return (-1);
-                // }
             } else {
                 if (handle_inc(s, i) < 0) {
                     printf("Fail to hanle a message from fd: %d\n", i);
@@ -57,9 +53,9 @@ int    handshake(t_socket *s)
     return (1);
 }
 
-int handle_inc(t_socket *s, int fd)
+int         handle_inc(t_socket *s, int fd)
 {
-    char buff[MESSAGE_LENGTH];
+    char    buff[MESSAGE_LENGTH];
 
     if (read_from_socket(fd, &buff) < 0) {
         close_connection(s, fd);
@@ -107,7 +103,10 @@ void close_connection(t_socket *s, int fd)
     printf("Connection closed\n");
 }
 
-void send_event(t_socket *socket, const char *command)
+void        send_event(t_socket *socket, const char *command)
 {
-    send(socket->fd, command, 10, 0);
+    char    buff[MESSAGE_LENGTH];
+
+    sprintf(buff, "%-*s\n", MESSAGE_LENGTH - 2, command);
+    send(socket->fd, buff, MESSAGE_LENGTH, 0);
 }

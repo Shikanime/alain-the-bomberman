@@ -7,7 +7,7 @@ t_button        *create_button(int x, int y, size_t width, size_t height, const 
     t_button    *button = malloc(sizeof(t_button));
 
     if (!button) {
-        perror("Fail to create button");
+        perror("Fail to allocate button");
         return (NULL);
     }
     button->position = create_position(x, y);

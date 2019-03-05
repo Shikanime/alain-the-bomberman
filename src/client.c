@@ -15,6 +15,8 @@ const char *SCREEN_TITLE = "Bomberman";
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
+uint8_t init_subsystem();
+uint8_t quit_subsystem();
 int enter_game_loop(SDL_Window *window, t_game *game);
 
 int             run_client(const char *address, uint16_t port)
@@ -22,12 +24,7 @@ int             run_client(const char *address, uint16_t port)
     SDL_Window  *window = NULL;
     t_game      *game = NULL;
 
-    if (SDL_Init(SDL_CONFIG) < 0) {
-        fprintf(stderr, "Could not initialize sdl2: %s\n", SDL_GetError());
-        return (EXIT_FAILURE);
-    }
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        fprintf(stderr, "Could not initialize sdl2_image: %s\n", IMG_GetError());
+    if (init_subsystem() < 0) {
         return (EXIT_FAILURE);
     }
     window = SDL_CreateWindow(SCREEN_TITLE,
@@ -42,20 +39,21 @@ int             run_client(const char *address, uint16_t port)
     if (!game) {
         fprintf(stderr, "Game instance fail to start: %s\n", strerror(errno));
         SDL_DestroyWindow(window);
-        SDL_Quit();
+        quit_subsystem();
         return (EXIT_FAILURE);
     }
     place_hero(game->env, game->player);
+    send_event(game->client, "spawn");
     if (enter_game_loop(window, game) < 0) {
         fprintf(stderr, "Game quit with exception: %s\n", strerror(errno));
         destroy_game(game);
         SDL_DestroyWindow(window);
-        SDL_Quit();
+        quit_subsystem();
         return (EXIT_FAILURE);
     }
     destroy_game(game);
     SDL_DestroyWindow(window);
-    SDL_Quit();
+    quit_subsystem();
     return (EXIT_SUCCESS);
 }
 
@@ -94,4 +92,23 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
     destroy_ressource(ressource);
     SDL_DestroyRenderer(renderer);
     return (0);
+}
+
+uint8_t init_subsystem()
+{
+    if (SDL_Init(SDL_CONFIG) < 0) {
+        fprintf(stderr, "Could not initialize sdl2: %s\n", SDL_GetError());
+        return (-1);
+    }
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        fprintf(stderr, "Could not initialize sdl2_image: %s\n", IMG_GetError());
+        return (-1);
+    }
+    return (0);
+}
+
+uint8_t quit_subsystem()
+{
+    SDL_Quit();
+    IMG_Quit();
 }
