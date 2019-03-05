@@ -15,8 +15,8 @@ const char *SCREEN_TITLE = "Bomberman";
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-uint8_t init_subsystem();
-uint8_t quit_subsystem();
+int8_t init_subsystem();
+void quit_subsystem();
 int enter_game_loop(SDL_Window *window, t_game *game);
 
 int             run_client(const char *address, uint16_t port)
@@ -94,7 +94,7 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
     return (0);
 }
 
-uint8_t init_subsystem()
+int8_t init_subsystem()
 {
     if (SDL_Init(SDL_CONFIG) < 0) {
         fprintf(stderr, "Could not initialize sdl2: %s\n", SDL_GetError());
@@ -107,7 +107,7 @@ uint8_t init_subsystem()
     return (0);
 }
 
-uint8_t quit_subsystem()
+void quit_subsystem()
 {
     SDL_Quit();
     IMG_Quit();

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include "./env.h"
 
 int8_t init_env_heros(t_env *env);
