@@ -3,6 +3,7 @@
 #include <sys/socket.h>
 #include "./event.h"
 #include "./event/menu.h"
+#include "./action/placement.h"
 #include "./event/hero.h"
 
 #ifdef __APPLE__
@@ -13,7 +14,19 @@ void        sub_events(t_game *game) {
     char    buff[MESSAGE_LENGTH];
 
     if (recv(game->client->fd, buff, MESSAGE_LENGTH, MSG_DONTWAIT | MSG_NOSIGNAL) > 0) {
-        send(1, buff, MESSAGE_LENGTH, MSG_NOSIGNAL);
+        if (strncmp(buff, "spawn", 5) == 0) {
+            char    nb_buff[2];
+            int     pos_x = 0;
+            int     pos_y = 0;
+
+            strncpy(nb_buff, buff + 7, 1);
+            pos_x = atoi(nb_buff);
+
+            strncpy(nb_buff, buff + 9, 1);
+            pos_y = atoi(nb_buff);
+
+            place_hero(game->env, create_hero(pos_x, pos_y));
+        }
     }
 }
 

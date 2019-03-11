@@ -17,7 +17,7 @@ int             run_server(uint16_t port)
         fprintf(stderr, "Fail to create the server: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }
-    if (connect_server(server, port) < 0) {
+    if (socket_server_mode(server, port) < 0) {
         fprintf(stderr, "Fail to start the server with exception: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }

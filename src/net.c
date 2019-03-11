@@ -38,7 +38,7 @@ int dispatch_event(t_socket *s)
     return (1);
 }
 
-int    handshake(t_socket *s)
+int     handshake(t_socket *s)
 {
     int fd = accept(
         s->fd,
@@ -61,10 +61,12 @@ int         handle_inc(t_socket *s, int fd)
         close_connection(s, fd);
         return (-1);
     }
-    printf("Message received from %d of content: %.10s", fd, buff);
-    if (broadcast_event(s, fd, buff) < 0) {
-        close_connection(s, fd);
-        return (-1);
+    printf("Message received from %d of content: %.*s", fd, MESSAGE_LENGTH, buff);
+    if (strncmp(buff, "spawn", 5) == 0) {
+        if (broadcast_event(s, fd, buff) < 0) {
+            close_connection(s, fd);
+            return (-1);
+        }
     }
     return (1);
 }
@@ -84,7 +86,7 @@ int         read_from_socket(int fd, char (*buff)[MESSAGE_LENGTH])
 
 int broadcast_event(t_socket *s, int sender, const char *evt)
 {
-    for (int i = 3; i < FD_SETSIZE; i++) {
+    for (int i = 0; i < FD_SETSIZE; i++) {
         if (FD_ISSET(i, &s->active_set)) {
             if (i != s->fd && i != sender) {
                 if (send(i, evt, MESSAGE_LENGTH, 0) < 0) {

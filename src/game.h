@@ -20,3 +20,4 @@ typedef struct  s_game
 
 t_game  *create_game();
 void    destroy_game(t_game *game);
+int     init_game(t_game *game);

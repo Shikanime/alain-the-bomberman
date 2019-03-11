@@ -8,7 +8,6 @@
 #include "./render.h"
 #include "./ressource.h"
 #include "./model/ui/menu.h"
-#include "./action/placement.h"
 
 const Uint32 SDL_CONFIG = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER;
 const char *SCREEN_TITLE = "Bomberman";
@@ -36,7 +35,7 @@ int             run_client(const char *address, uint16_t port)
         return (EXIT_FAILURE);
     }
     game = create_game();
-    if (connect_client(game->client, address, port) < 0) {
+    if (socket_client_mode(game->client, address, port) < 0) {
         fprintf(stderr, "Fail to connect server: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }
@@ -46,8 +45,10 @@ int             run_client(const char *address, uint16_t port)
         quit_subsystem();
         return (EXIT_FAILURE);
     }
-    place_hero(game->env, game->player);
-    send_event(game->client, "spawn");
+    if (init_game(game) < 0) {
+        fprintf(stderr, "Fail to init server: %s\n", strerror(errno));
+        return (EXIT_FAILURE);
+    }
     if (enter_game_loop(window, game) < 0) {
         fprintf(stderr, "Game quit with exception: %s\n", strerror(errno));
         destroy_game(game);

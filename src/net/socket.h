@@ -3,8 +3,6 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 
-#define MESSAGE_LENGTH 10
-
 typedef struct          s_socket
 {
     int                 fd;
@@ -15,6 +13,6 @@ typedef struct          s_socket
 }                       t_socket;
 
 t_socket    *create_socket();
-int         connect_client(t_socket *sok, const char *address, uint16_t port);
-int         connect_server(t_socket *sok, uint16_t port);
+int         socket_client_mode(t_socket *sok, const char *address, uint16_t port);
+int         socket_server_mode(t_socket *sok, uint16_t port);
 void        destroy_socket(t_socket *client);

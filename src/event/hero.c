@@ -4,7 +4,7 @@
 
 void dispatch_move_event(SDL_Keycode key, t_hero *hero, t_game *game);
 
-void            handle_hero_inputs(SDL_Event *event, t_game *game)
+void handle_hero_inputs(SDL_Event *event, t_game *game)
 {
     switch (event->type) {
         case SDL_KEYDOWN:
