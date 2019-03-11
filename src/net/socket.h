@@ -15,6 +15,6 @@ typedef struct          s_socket
 }                       t_socket;
 
 t_socket    *create_socket();
-int8_t      connect_client(t_socket *sok, const char *address, uint16_t port);
-int8_t      connect_server(t_socket *sok, uint16_t port);
+int         connect_client(t_socket *sok, const char *address, uint16_t port);
+int         connect_server(t_socket *sok, uint16_t port);
 void        destroy_socket(t_socket *client);

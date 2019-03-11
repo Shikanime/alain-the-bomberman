@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include "./env.h"
 
-int8_t init_env_heros(t_env *env);
-int8_t init_env_bombs(t_env *env);
+int init_env_heros(t_env *env);
+int init_env_bombs(t_env *env);
 
 t_env       *create_env()
 {
@@ -26,7 +26,7 @@ t_env       *create_env()
     return (env);
 }
 
-int8_t init_env_heros(t_env *env)
+int init_env_heros(t_env *env)
 {
     env->heros = calloc(0, sizeof(t_hero*));
     if (!env->heros) {
@@ -37,7 +37,7 @@ int8_t init_env_heros(t_env *env)
     return (0);
 }
 
-int8_t init_env_bombs(t_env *env)
+int init_env_bombs(t_env *env)
 {
     env->bombs = calloc(0, sizeof(t_bomb*));
     if (!env->bombs) {

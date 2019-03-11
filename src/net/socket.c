@@ -18,7 +18,7 @@ t_socket        *create_socket()
     return (conn);
 }
 
-int8_t connect_client(t_socket *conn, const char *address, uint16_t port)
+int connect_client(t_socket *conn, const char *address, uint16_t port)
 {
     conn->addr.sin_port = htons(port);
     conn->addr.sin_addr.s_addr = inet_addr(address);
@@ -31,7 +31,7 @@ int8_t connect_client(t_socket *conn, const char *address, uint16_t port)
     return (0);
 }
 
-int8_t connect_server(t_socket *conn, uint16_t port)
+int connect_server(t_socket *conn, uint16_t port)
 {
     conn->addr.sin_port = htons(port);
     conn->addr.sin_addr.s_addr = INADDR_ANY;
