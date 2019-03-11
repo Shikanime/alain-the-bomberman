@@ -38,6 +38,5 @@ int         sync_player(t_game *game, char *address, uint16_t port)
     place_bomberman(game->map, create_bomberman(), game->player->x, game->player->y);
     sprintf(packet, "spawn %02d %02d", game->player->x, game->player->y);
     send_event(game->server, packet);
-    printf("Player spawn on %d:%d\n", game->player->x, game->player->y);
     return (1);
 }

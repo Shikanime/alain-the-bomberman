@@ -64,8 +64,13 @@ void        handle_server_events(t_game *game, char *packet)
     int     y = 0;
 
     if (sscanf(packet, "spawn %02d %02d", &x, &y) == 2) {
-        place_bomberman(game->map, create_bomberman(), x, y);
-        printf("A new player have been connected at %d:%d", x, y);
+        if (place_bomberman(game->map, create_bomberman(), x, y)) {
+            char discorvery_packet[20];
+
+            printf("A new player have been connected at %d:%d", x, y);
+            sprintf(discorvery_packet, "spawn %02d %02d", game->player->x, game->player->y);
+            send_event(game->server, discorvery_packet);
+        }
     } else if (sscanf(packet, "mv down %02d %02d", &x, &y) == 2) {
         t_player *player = malloc(sizeof(t_player));
 
