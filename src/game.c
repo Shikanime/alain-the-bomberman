@@ -25,7 +25,6 @@ t_game      *create_game(const char *address, uint16_t port)
             destroy_game(game);
             return (NULL);
         }
-
     }
     return (game);
 }
