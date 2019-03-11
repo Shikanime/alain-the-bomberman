@@ -90,7 +90,7 @@ int         handle_packet(t_conn *s, int fd)
         close_connection(s, fd);
         return (-1);
     }
-    handle_client_events(s, fd, msg_buff);
+    broadcast_event(s, fd, msg_buff);
     printf("Message received from %d of content: %.*s", fd, 20, msg_buff);
     return (1);
 }
