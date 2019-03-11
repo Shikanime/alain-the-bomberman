@@ -9,14 +9,14 @@ int handle_join(t_conn *s);
 int handle_packet(t_conn *s, int fd);
 int read_from_socket(int fd, char (*msg_buff)[20]);
 
-void        sub_packets(t_game *game)
+void        sub_sever_inputs(t_game *game)
 {
     char    packet_msg_buff[20];
 
-    if (recv(game->client->fd, packet_msg_buff, 20, MSG_DONTWAIT | MSG_NOSIGNAL) < 0) {
-        switch (state) {
-            case GAME_FLOW_RUN:
-                handle_game_events(game);
+    if (recv(game->server->fd, packet_msg_buff, 20, MSG_DONTWAIT) >= 0) {
+        switch (game->state) {
+            case GAME_RUN:
+                handle_server_events(game, packet_msg_buff);
                 break;
 
             default:
@@ -31,14 +31,14 @@ void            sub_inputs(t_game *game)
 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
-            game->state = GAME_FLOW_EXIT;
+            game->state = GAME_EXIT;
         } else {
             switch (game->state) {
-                case GAME_FLOW_MENU:
+                case GAME_MENU:
                     handle_menu_inputs(&event, game);
                     break;
 
-                case GAME_FLOW_RUN:
+                case GAME_RUN:
                     handle_game_inputs(&event, game);
                     break;
 
@@ -49,7 +49,7 @@ void            sub_inputs(t_game *game)
     }
 }
 
-void broadcast_packets(t_conn *s)
+void sub_client_inputs(t_conn *s)
 {
     s->read_set = s->active_set;
     if (select(FD_SETSIZE, &s->read_set, NULL, NULL, NULL) >= 0) {
@@ -61,7 +61,7 @@ void broadcast_packets(t_conn *s)
                     }
                 } else {
                     if (handle_packet(s, i) < 0) {
-                        printf("Fail to hanle a message from fd: %d\n", i);
+                        printf("Fail to handle a message from fd: %d\n", i);
                     }
                 }
             }
@@ -90,7 +90,7 @@ int         handle_packet(t_conn *s, int fd)
         close_connection(s, fd);
         return (-1);
     }
-    handle_game_broadcasts(s, fd, msg_buff);
+    handle_client_events(s, fd, msg_buff);
     printf("Message received from %d of content: %.*s", fd, 20, msg_buff);
     return (1);
 }

@@ -4,9 +4,8 @@
 #include "./net.h"
 #include "./action/placement.h"
 
-t_game      *create_game(t_map *map, size_t player_x, size_t player_y)
+t_game      *create_game()
 {
-    char    packet[20];
     t_game  *game = malloc(sizeof(t_game));
 
     if (game == NULL) {
@@ -14,12 +13,9 @@ t_game      *create_game(t_map *map, size_t player_x, size_t player_y)
         return (NULL);
     }
     game->state = GAME_RUN;
-    game->map = map;
-    game->player_x = player_x;
-    game->player_y = player_y;
-    place_bomberman(map, create_bomberman(), player_x, player_y);
-    sprintf(packet, "spawn %02zu %02zu", player_x, player_y);
-    send_event(game->server, packet);
+    game->map = create_map(16, 12);
+    game->player = create_player(16, 12);
+    game->server = create_conn();
     return game;
 }
 
@@ -27,6 +23,21 @@ void destroy_game(t_game *game)
 {
     if (game != NULL) {
         destroy_map(game->map);
+        destroy_conn(game->server);
         free(game);
     }
+}
+
+int         sync_player(t_game *game, char *address, uint16_t port)
+{
+    char    packet[20];
+
+    if (conn_client_mode(game->server, address, port) < 0) {
+        return (-1);
+    }
+    place_bomberman(game->map, create_bomberman(), game->player->x, game->player->y);
+    sprintf(packet, "spawn %02d %02d", game->player->x, game->player->y);
+    send_event(game->server, packet);
+    printf("Player spawn on %d:%d\n", game->player->x, game->player->y);
+    return (1);
 }

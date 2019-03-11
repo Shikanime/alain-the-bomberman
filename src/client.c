@@ -7,7 +7,6 @@
 #include "./event.h"
 #include "./render.h"
 #include "./ressource.h"
-#include "./model/ui/menu.h"
 
 const char *SCREEN_TITLE = "Bomberman";
 const int SCREEN_WIDTH = 640;
@@ -28,13 +27,13 @@ int             run_client(const char *address, uint16_t port)
         fprintf(stderr, "Game window fail to start: %s\n", SDL_GetError());
         return (EXIT_FAILURE);
     }
-    game = create_game(create_map(), 0, 0);
+    game = create_game();
     if (!game) {
         fprintf(stderr, "Game game fail to start: %s\n", strerror(errno));
         SDL_DestroyWindow(window);
         return (EXIT_FAILURE);
     }
-    if (conn_client_mode(game->server, address, port) < 0) {
+    if (sync_player(game, address, port) < 0) {
         fprintf(stderr, "Fail to connect server: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }
@@ -67,8 +66,8 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
     while (game->state != GAME_EXIT) {
         SDL_RenderClear(renderer);
         if (game->state == GAME_RUN) {
-            sub_packets(game);
-            sub_inputs(&state, game);
+            sub_sever_inputs(game);
+            sub_inputs(game);
             render_entites(renderer, ressource, game->map);
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

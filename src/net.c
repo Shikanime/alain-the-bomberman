@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "./net.h"
 #include "./action/placement.h"
 
@@ -7,7 +8,7 @@ void broadcast_event(t_conn *conn, int sender_fd, const char *event)
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (FD_ISSET(i, &conn->active_set)) {
             if (i != conn->fd && i != sender_fd) {
-                send(i, event, 20, 0) < 0);
+                send(i, event, 20, MSG_DONTWAIT);
             }
         }
     }
@@ -23,8 +24,8 @@ void        send_event(t_conn *conn, const char *command)
 {
     char    buff[20];
 
-    sprintf(buff, "%-*conn\n", 20 - 2, command);
-    send(conn->fd, buff, 20, 0);
+    sprintf(buff, "%-*s\n", 20 - 2, command);
+    send(conn->fd, buff, 20, MSG_DONTWAIT);
 }
 
 int conn_client_mode(t_conn *conn, const char *address, uint16_t port)

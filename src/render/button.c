@@ -1,6 +1,6 @@
 #include "./button.h"
 
-void            render_button(SDL_Renderer *renderer, SDL_Texture *texture, size_t x, size_t y)
+void            render_button(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
 {
     (void) texture;
 

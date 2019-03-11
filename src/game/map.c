@@ -11,9 +11,13 @@ t_map       *create_map(size_t width, size_t height)
     }
     map->width = width;
     map->height = height;
-    map->matrix = calloc(height, sizeof(**t_cell));
+    map->matrix = calloc(height, sizeof(t_cell*));
     for (size_t i = 0; i < height; i++) {
-        map->matrix[i] = calloc(width, sizeof(*t_cell));
+        map->matrix[i] = calloc(width, sizeof(t_cell));
+        for (size_t j = 0; j < width; j++) {
+            map->matrix[i][j].bomb = NULL;
+            map->matrix[i][j].bomberman = NULL;
+        }
     }
     return (map);
 }
@@ -22,7 +26,7 @@ void destroy_map(t_map *map)
 {
     if (map != NULL) {
         if (map->matrix != NULL) {
-            for (size_t i = 0; i < map->width; i++) {
+            for (size_t i = 0; i < map->height; i++) {
                 if (map->matrix[i] != NULL) {
                     free(map->matrix[i]);
                 }

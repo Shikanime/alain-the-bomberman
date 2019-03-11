@@ -15,7 +15,9 @@
         "board.h": "c",
         "attack.h": "c",
         "bomberman.h": "c",
-        "instance.h": "c"
+        "instance.h": "c",
+        "map.h": "c",
+        "player.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "svn.ignoreMissingSvnWarning": true

@@ -1,4 +1,8 @@
 #include "./boot.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <stdlib.h>
+#include <time.h>
 
 const Uint32 SDL_CONFIG = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER;
 
@@ -12,6 +16,7 @@ int init_subsystem()
         fprintf(stderr, "Could not initialize sdl2_image: %s\n", IMG_GetError());
         return (-1);
     }
+    srand((unsigned int)time(NULL));
     return (1);
 }
 

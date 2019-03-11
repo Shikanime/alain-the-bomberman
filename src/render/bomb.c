@@ -21,7 +21,7 @@ SDL_Texture   *load_bomb(SDL_Renderer *renderer)
   return texture;
 }
 
-void        render_bomb(SDL_Renderer *renderer, SDL_Texture *texture, size_t x, size_t y)
+void        render_bomb(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
 {
   SDL_Rect  dest = {x, y, 40, 40};
 

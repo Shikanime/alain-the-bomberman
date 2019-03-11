@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "./bomb.h"
 
 t_bomb      *create_bomb()

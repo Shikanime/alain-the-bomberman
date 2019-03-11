@@ -37,9 +37,7 @@ int                 enter_server_loop(t_conn *s)
     e_server_status  state = SERVER_RUN;
 
     while (state != SERVER_HALT) {
-        if (broadcast_packets(s) < 0) {
-            printf("Fail to process an event\n");
-        }
+        sub_client_inputs(s);
     }
     return (1);
 }

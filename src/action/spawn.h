@@ -6,4 +6,4 @@
 #include "../game/bomberman.h"
 #include "../game/map.h"
 
-bool spawn_bomberman(t_map *map, t_bomberman *bomberman, size_t x, size_t y);
+bool spawn_bomberman(t_map *map, t_bomberman *bomberman, int x, int y);

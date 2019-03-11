@@ -2,6 +2,6 @@
 
 #include "./game.h"
 
-void sub_packets(t_game *game);
+void sub_sever_inputs(t_game *game);
 void sub_inputs(t_game *game);
-void broadcast_packets(t_conn *s);
+void sub_client_inputs(t_conn *s);

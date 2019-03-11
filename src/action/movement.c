@@ -1,57 +1,75 @@
 #include "./movement.h"
 
-bool move_bomberman_up(t_map *map, size_t x, size_t y)
+bool            move_bomberman_up(t_map *map, t_player *player)
 {
-    if (map->matrix[y][x].bomberman == NULL) {
+    t_bomberman *bomberman = NULL;
+
+    if (map->matrix[player->y][player->x].bomberman == NULL) {
         return false;
     }
-    if (y - 1 < 0) {
-        map->matrix[map->height][x].bomberman = map->matrix[y][x].bomberman;
+    bomberman = map->matrix[player->y][player->x].bomberman;
+    map->matrix[player->y][player->x].bomberman = NULL;
+    if (player->y - 1 < 0) {
+        player->y = map->height - 1;
     } else {
-        map->matrix[y - 1][x].bomberman = map->matrix[y][x].bomberman;
+        player->y -= 1;
     }
-    map->matrix[y][x].bomberman = NULL;
+    map->matrix[player->y][player->x].bomberman = bomberman;
     return true;
 }
 
-void move_bomberman_down(t_map *map, size_t x, size_t y)
+bool            move_bomberman_down(t_map *map, t_player *player)
 {
-    if (map->matrix[y][x].bomberman == NULL) {
+    t_bomberman *bomberman = NULL;
+
+    if (map->matrix[player->y][player->x].bomberman == NULL) {
         return false;
     }
-    if (y + 1 > map->height) {
-        map->matrix[0][x].bomberman = map->matrix[y][x].bomberman;
+    bomberman = map->matrix[player->y][player->x].bomberman;
+    map->matrix[player->y][player->x].bomberman = NULL;
+    if (player->y + 1 >= map->height) {
+        player->y = 0;
     } else {
-        map->matrix[y + 1][x].bomberman = map->matrix[y][x].bomberman;
+        player->y += 1;
     }
-    map->matrix[y][x].bomberman = NULL;
+    map->matrix[player->y][player->x].bomberman = bomberman;
     return true;
 }
 
-void move_bomberman_left(t_map *map, size_t x, size_t y)
+bool            move_bomberman_left(t_map *map, t_player *player)
 {
-    if (map->matrix[y][x].bomberman == NULL) {
+    t_bomberman *bomberman = NULL;
+
+    if (map->matrix[player->y][player->x].bomberman == NULL) {
         return false;
     }
-    if (x + 1 > map->width) {
-        map->matrix[y][0].bomberman = map->matrix[y][x].bomberman;
+    bomberman = map->matrix[player->y][player->x].bomberman;
+    map->matrix[player->y][player->x].bomberman = NULL;
+    if (player->x - 1 < 0) {
+        map->matrix[player->y][map->width - 1].bomberman = map->matrix[player->y][player->x].bomberman;
+        player->x = map->width - 1;
     } else {
-        map->matrix[y][x + 1].bomberman = map->matrix[y][x].bomberman;
+        map->matrix[player->y][player->x - 1].bomberman = map->matrix[player->y][player->x].bomberman;
+        player->x -= 1;
     }
-    map->matrix[y][x].bomberman = NULL;
+    map->matrix[player->y][player->x].bomberman = bomberman;
     return true;
 }
 
-void move_bomberman_right(t_map *map, size_t x, size_t y)
+bool            move_bomberman_right(t_map *map, t_player *player)
 {
-    if (map->matrix[y][x].bomberman == NULL) {
+    t_bomberman *bomberman = NULL;
+
+    if (map->matrix[player->y][player->x].bomberman == NULL) {
         return false;
     }
-    if (x - 1 < 0) {
-        map->matrix[y][map->width].bomberman = map->matrix[y][x].bomberman;
+    bomberman = map->matrix[player->y][player->x].bomberman;
+    map->matrix[player->y][player->x].bomberman = NULL;
+    if (player->x + 1 >= map->width) {
+        player->x = 0;
     } else {
-        map->matrix[y][x - 1].bomberman = map->matrix[y][x].bomberman;
+        player->x += 1;
     }
-    map->matrix[y][x].bomberman = NULL;
+    map->matrix[player->y][player->x].bomberman = bomberman;
     return true;
 }

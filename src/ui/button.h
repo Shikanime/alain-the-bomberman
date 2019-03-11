@@ -6,8 +6,8 @@ typedef struct      s_button
 {
     size_t          width;
     size_t          height;
-    size_t          x;
-    size_t          y;
+    int             x;
+    int             y;
     const char      *text;
 }                   t_button;
 

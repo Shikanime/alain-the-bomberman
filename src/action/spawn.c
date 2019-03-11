@@ -1,6 +1,6 @@
 #include "./spawn.h"
 
-bool spawn_bomberman(t_map *map, t_bomberman *bomberman, size_t x, size_t y)
+bool spawn_bomberman(t_map *map, t_bomberman *bomberman, int x, int y)
 {
     if (map->matrix[y][x].bomberman != NULL) {
         return false;

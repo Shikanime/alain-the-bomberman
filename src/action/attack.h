@@ -1,7 +1,8 @@
 
 #pragma once
 
-#include <stdlib.h>
+#include <stdbool.h>
 #include "../game/map.h"
+#include "../game/player.h"
 
-int allahu_akbar(t_map *map, size_t x, size_t y);
+bool allahu_akbar(t_map *map, t_player *player);

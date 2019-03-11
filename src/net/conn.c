@@ -7,8 +7,8 @@ t_conn      *create_conn()
 {
     t_conn  *conn = malloc(sizeof(t_conn));
 
-    if (conn != NULL) {
-        perror("Fail to allocate bomb");
+    if (conn == NULL) {
+        perror("Fail to allocate conn");
         return (NULL);
     }
     conn->fd = socket(AF_INET, SOCK_STREAM, 0);
