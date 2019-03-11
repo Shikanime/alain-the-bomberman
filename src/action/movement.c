@@ -1,42 +1,57 @@
 #include "./movement.h"
 
-void move_hero_up(t_hero *hero, t_env *env)
+bool move_bomberman_up(t_map *map, size_t x, size_t y)
 {
-    (void)env;
-    if (0 <= hero->position->y - (int)hero->body->width / 2) {
-        hero->position->y = hero->position->y - (int) hero->speed;
-    } else {
-        hero->position->y = 0;
+    if (map->matrix[y][x].bomberman == NULL) {
+        return false;
     }
+    if (y - 1 < 0) {
+        map->matrix[map->height][x].bomberman = map->matrix[y][x].bomberman;
+    } else {
+        map->matrix[y - 1][x].bomberman = map->matrix[y][x].bomberman;
+    }
+    map->matrix[y][x].bomberman = NULL;
+    return true;
 }
 
-void move_hero_down(t_hero *hero, t_env *env)
+void move_bomberman_down(t_map *map, size_t x, size_t y)
 {
-    if (hero->position->y + (int)hero->body->height < (int)env->sz.height) {
-        hero->position->y = hero->position->y + (int) hero->speed;
-    } else {
-        hero->position->y = (int)(env->sz.height - hero->body->height);
+    if (map->matrix[y][x].bomberman == NULL) {
+        return false;
     }
+    if (y + 1 > map->height) {
+        map->matrix[0][x].bomberman = map->matrix[y][x].bomberman;
+    } else {
+        map->matrix[y + 1][x].bomberman = map->matrix[y][x].bomberman;
+    }
+    map->matrix[y][x].bomberman = NULL;
+    return true;
 }
 
-void move_hero_left(t_hero *hero, t_env *env)
+void move_bomberman_left(t_map *map, size_t x, size_t y)
 {
-    (void)env;
-    if (0 <= hero->position->x - (int)hero->body->height / 2) {
-        hero->position->x = hero->position->x - (int) hero->speed;
-    } else {
-        hero->position->x = 0;
+    if (map->matrix[y][x].bomberman == NULL) {
+        return false;
     }
+    if (x + 1 > map->width) {
+        map->matrix[y][0].bomberman = map->matrix[y][x].bomberman;
+    } else {
+        map->matrix[y][x + 1].bomberman = map->matrix[y][x].bomberman;
+    }
+    map->matrix[y][x].bomberman = NULL;
+    return true;
 }
 
-void move_hero_right(t_hero *hero, t_env *env)
+void move_bomberman_right(t_map *map, size_t x, size_t y)
 {
-    if (hero->position->x + (int)hero->body->width
-        < (int)env->sz.width) {
-        hero->position->x = hero->position->x + (int) hero->speed;
-    } else {
-        hero->position->x = (int)(
-            env->sz.width - hero->body->width
-        );
+    if (map->matrix[y][x].bomberman == NULL) {
+        return false;
     }
+    if (x - 1 < 0) {
+        map->matrix[y][map->width].bomberman = map->matrix[y][x].bomberman;
+    } else {
+        map->matrix[y][x - 1].bomberman = map->matrix[y][x].bomberman;
+    }
+    map->matrix[y][x].bomberman = NULL;
+    return true;
 }

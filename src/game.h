@@ -1,23 +1,25 @@
 #pragma once
 
-#include "./net.h"
-#include "./game/env.h"
-#include "./model/entity/hero.h"
+#include <stdlib.h>
+#include "./net/conn.h"
+#include "./game/map.h"
+#include "./game/bomberman.h"
 
 typedef enum {
-    GAME_FLOW_EXIT,
-    GAME_FLOW_RUN,
-    GAME_FLOW_MENU,
-    GAME_FLOW_SKIP
-}   e_game_flow;
+    GAME_EXIT,
+    GAME_RUN,
+    GAME_PAUSE,
+    GAME_SKIP
+}   e_game_state;
 
-typedef struct  s_game
+typedef struct      s_game
 {
-    t_socket    *client;
-    t_hero      *player;
-    t_env       *env;
-}               t_game;
+    e_game_state    state;
+    t_conn        *server;
+    t_map           *map;
+    size_t          player_x;
+    size_t          player_y;
+}                   t_game;
 
-t_game  *create_game();
+t_game  *create_game(t_map *map, size_t player_x, size_t player_y);
 void    destroy_game(t_game *game);
-int     init_game(t_game *game);

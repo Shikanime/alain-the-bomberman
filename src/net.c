@@ -1,114 +1,59 @@
-#include <string.h>
 #include <stdio.h>
-#include <unistd.h>
 #include "./net.h"
+#include "./action/placement.h"
 
-int read_from_socket(int fd, char (*buff)[MESSAGE_LENGTH]);
-int handshake(t_socket *s);
-int handle_inc(t_socket *s, int fd);
-int broadcast_event(t_socket *s, int sender, const char *evt);
-void close_connection(t_socket *s, int fd);
-
-int await_event(t_socket *s)
-{
-    s->read_set = s->active_set;
-    if (select(FD_SETSIZE, &s->read_set, NULL, NULL, NULL) < 0) {
-        return (-1);
-    }
-    return (1);
-}
-
-int dispatch_event(t_socket *s)
+void broadcast_event(t_conn *conn, int sender_fd, const char *event)
 {
     for (int i = 0; i < FD_SETSIZE; i++) {
-        if (FD_ISSET(i, &s->read_set)) {
-            if (i == s->fd) {
-                if (handshake(s) < 0) {
-                    return (-1);
-                } else {
-                    printf("New connection\n");
-                }
-            } else {
-                if (handle_inc(s, i) < 0) {
-                    printf("Fail to hanle a message from fd: %d\n", i);
-                }
+        if (FD_ISSET(i, &conn->active_set)) {
+            if (i != conn->fd && i != sender_fd) {
+                send(i, event, 20, 0) < 0);
             }
         }
     }
-    return (1);
 }
 
-int     handshake(t_socket *s)
-{
-    int fd = accept(
-        s->fd,
-        (struct sockaddr*)&s->addr,
-        &s->len
-    );
-
-    if (fd < 0) {
-        return (-1);
-    }
-    FD_SET(fd, &s->active_set);
-    return (1);
-}
-
-int         handle_inc(t_socket *s, int fd)
-{
-    char    buff[MESSAGE_LENGTH];
-
-    if (read_from_socket(fd, &buff) < 0) {
-        close_connection(s, fd);
-        return (-1);
-    }
-    printf("Message received from %d of content: %.*s", fd, MESSAGE_LENGTH, buff);
-    if (strncmp(buff, "spawn", 5) == 0) {
-        if (broadcast_event(s, fd, buff) < 0) {
-            close_connection(s, fd);
-            return (-1);
-        }
-    }
-    return (1);
-}
-
-int         read_from_socket(int fd, char (*buff)[MESSAGE_LENGTH])
-{
-    ssize_t n = recv(fd, buff, MESSAGE_LENGTH, 0);
-
-    if (n < 0) {
-    return (-1);
-    }
-    if (n == 0) {
-        return (-1);
-    }
-    return 0;
-}
-
-int broadcast_event(t_socket *s, int sender, const char *evt)
-{
-    for (int i = 0; i < FD_SETSIZE; i++) {
-        if (FD_ISSET(i, &s->active_set)) {
-            if (i != s->fd && i != sender) {
-                if (send(i, evt, MESSAGE_LENGTH, 0) < 0) {
-                    return (-1);
-                }
-            }
-        }
-    }
-    return (0);
-}
-
-void close_connection(t_socket *s, int fd)
+void close_connection(t_conn *conn, int fd)
 {
     close(fd);
-    FD_CLR(fd, &s->active_set);
-    printf("Connection closed\n");
+    FD_CLR(fd, &conn->active_set);
 }
 
-void        send_event(t_socket *socket, const char *command)
+void        send_event(t_conn *conn, const char *command)
 {
-    char    buff[MESSAGE_LENGTH];
+    char    buff[20];
 
-    sprintf(buff, "%-*s\n", MESSAGE_LENGTH - 2, command);
-    send(socket->fd, buff, MESSAGE_LENGTH, 0);
+    sprintf(buff, "%-*conn\n", 20 - 2, command);
+    send(conn->fd, buff, 20, 0);
+}
+
+int conn_client_mode(t_conn *conn, const char *address, uint16_t port)
+{
+    conn->addr.sin_port = htons(port);
+    conn->addr.sin_addr.s_addr = inet_addr(address);
+    if (connect(conn->fd, (struct sockaddr*)&conn->addr, sizeof(conn->addr)) < 0) {
+        perror("Client conn fail to connect");
+        return (-1);
+    }
+    FD_ZERO(&conn->active_set);
+    FD_SET(conn->fd, &conn->active_set);
+    return (1);
+}
+
+int conn_server_mode(t_conn *conn, uint16_t port)
+{
+    conn->addr.sin_port = htons(port);
+    conn->addr.sin_addr.s_addr = INADDR_ANY;
+    if (bind(conn->fd, (struct sockaddr*)&conn->addr, sizeof(conn->addr)) < 0) {
+        perror("Server conn fail to listen port");
+        conn->fd = -1;
+        return (-1);
+    }
+    if (listen(conn->fd, 4) < 0) {
+        perror("Server conn fail to listen port");
+        return (-1);
+    }
+    FD_ZERO(&conn->active_set);
+    FD_SET(conn->fd, &conn->active_set);
+    return (1);
 }

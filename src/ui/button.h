@@ -1,12 +1,13 @@
 #pragma once
 
-#include "../physic/position.h"
-#include "../physic/solid.h"
+#include <stdlib.h>
 
 typedef struct      s_button
 {
-    t_position      *position;
-    t_rect          *body;
+    size_t          width;
+    size_t          height;
+    size_t          x;
+    size_t          y;
     const char      *text;
 }                   t_button;
 

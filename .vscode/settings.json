@@ -10,7 +10,12 @@
         "stdlib.h": "c",
         "memory": "c",
         "locale": "c",
-        "string": "c"
+        "string": "c",
+        "ios": "cpp",
+        "board.h": "c",
+        "attack.h": "c",
+        "bomberman.h": "c",
+        "instance.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "svn.ignoreMissingSvnWarning": true

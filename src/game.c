@@ -1,55 +1,32 @@
 #include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
 #include "./game.h"
 #include "./net.h"
-#include "./model/entity/hero.h"
 #include "./action/placement.h"
-#include "./game/env.h"
 
-t_game      *create_game()
+t_game      *create_game(t_map *map, size_t player_x, size_t player_y)
 {
+    char    packet[20];
     t_game  *game = malloc(sizeof(t_game));
 
-    if (game) {
-        game->client = create_socket();
-        if (!game->client) {
-            destroy_game(game);
-            return (NULL);
-        }
-        game->player = create_hero(40, 40);
-        if (!game->player) {
-            destroy_game(game);
-            return (NULL);
-        }
-        game->env = create_env();
-        if (!game->env) {
-            destroy_game(game);
-            return (NULL);
-        }
+    if (game == NULL) {
+        perror("Fail to allocate game");
+        return (NULL);
     }
-    return (game);
+    game->state = GAME_RUN;
+    game->map = map;
+    game->player_x = player_x;
+    game->player_y = player_y;
+    place_bomberman(map, create_bomberman(), player_x, player_y);
+    sprintf(packet, "spawn %02zu %02zu", player_x, player_y);
+    send_event(game->server, packet);
+    return game;
 }
 
 void destroy_game(t_game *game)
 {
-    if (!game) {
-        if (game->env) {
-            destroy_env(game->env);
-        }
-        if (game->client) {
-            destroy_socket(game->client);
-        }
+    if (game != NULL) {
+        destroy_map(game->map);
         free(game);
     }
-}
-
-int         init_game(t_game *game)
-{
-    char    packet[MESSAGE_LENGTH];
-
-    place_hero(game->env, game->player);
-    sprintf(packet, "spawn %02d %02d", game->player->position->x, game->player->position->y);
-    send_event(game->client, packet);
-    return (0);
 }

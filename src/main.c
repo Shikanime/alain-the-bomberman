@@ -1,4 +1,3 @@
-#include <inttypes.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,16 +5,19 @@
 #include <pthread.h>
 #include "./client.h"
 #include "./server.h"
+#include "./boot.h"
 
 void *detact_server(void *vargp);
 
-// TODO: Refactor to getopt_long
 int main(int argc, char *argv[])
 {
     pthread_t   tr;
     char        *address = NULL;
     uint16_t    port = 0;
 
+    if (init_subsystem() < 0) {
+        return (EXIT_FAILURE);
+    }
     for (int j = 0; j < argc; j++) {
         if (strcmp(argv[j], "--port") == 0 && j + 1 <= argc) {
             sscanf(argv[j + 1], "%"SCNu16, &port);
@@ -41,7 +43,9 @@ int main(int argc, char *argv[])
         printf("No server IP specified\n");
         return (EXIT_FAILURE);
     }
-    return run_client(address, port);
+    run_client(address, port);
+    quit_subsystem();
+    return (EXIT_SUCCESS);
 }
 
 void *detact_server(void *vargp)

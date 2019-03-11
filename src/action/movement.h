@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../model/entity/hero.h"
-#include "../game/env.h"
+#include <stdbool.h>
+#include "../game/bomberman.h"
+#include "../game/map.h"
 
-void move_hero_up(t_hero *hero, t_env *env);
-void move_hero_down(t_hero *hero, t_env *env);
-void move_hero_left(t_hero *hero, t_env *env);
-void move_hero_right(t_hero *hero, t_env *env);
+bool move_bomberman_up(t_map *map, size_t x, size_t y);
+bool move_bomberman_down(t_map *map, size_t x, size_t y);
+bool move_bomberman_left(t_map *map, size_t x, size_t y);
+bool move_bomberman_right(t_map *map, size_t x, size_t y);

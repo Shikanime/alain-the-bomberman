@@ -2,19 +2,10 @@
 #include "./attack.h"
 #include "./placement.h"
 
-int allahu_akbar(t_env *env, t_hero *hero)
+bool allahu_akbar(t_map *map, size_t x, size_t y)
 {
-    t_bomb *bomb = create_bomb(
-        hero->position->x
-            + BOMB_HEIGHT / 2
-            - BOMB_WIDTH / 2,
-        hero->position->y
-            + BOMB_HEIGHT / 2
-            - BOMB_WIDTH / 2
-    );
-
-    if (bomb) {
-        return (place_bomb(env, bomb));
+    if (map->matrix[y][x].hero == NULL) {
+        return false;
     }
-    return (-1);
+    return place_bomb(map, create_bomb(), x, y);
 }

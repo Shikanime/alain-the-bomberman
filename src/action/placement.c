@@ -1,27 +1,19 @@
-#include <stdio.h>
-#include <stdbool.h>
 #include "./placement.h"
 
-void place_hero(t_env *env, t_hero *hero)
+bool place_bomb(t_map *map, t_bomb *bomb, size_t x, size_t y)
 {
-    env->heros = realloc(env->heros, sizeof(t_hero*) * ++env->hero_nb);
-    env->heros[env->hero_nb - 1] = hero;
+    if (map->matrix[y][x].bomb != NULL) {
+        return false;
+    }
+    map->matrix[y][x].bomb = bomb;
+    return true;
 }
 
-int        place_bomb(t_env *env, t_bomb *bomb)
+bool place_bomberman(t_map *map, t_bomberman *bomberman, size_t x, size_t y)
 {
-    bool    available = true;
-
-    for (size_t i = 0; i < env->bomb_nb; i++) {
-        if (env->bombs[i]->position->x == bomb->position->x &&
-            env->bombs[i]->position->y == bomb->position->y) {
-            available = false;
-        }
+    if (map->matrix[y][x].bomberman != NULL) {
+        return false;
     }
-    if (available) {
-        env->bombs = realloc(env->bombs, sizeof(t_bomb*) * ++env->bomb_nb);
-        env->bombs[env->bomb_nb - 1] = bomb;
-        return (1);
-    }
-    return (-1);
+    map->matrix[y][x].bomberman = bomberman;
+    return true;
 }

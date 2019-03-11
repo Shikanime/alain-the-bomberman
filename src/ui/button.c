@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include "./button.h"
 
@@ -10,17 +9,17 @@ t_button        *create_button(int x, int y, size_t width, size_t height, const 
         perror("Fail to allocate button");
         return (NULL);
     }
-    button->position = create_position(x, y);
-    button->body = create_rect(width ,height);
+    button->x = x;
+    button->y = y;
+    button->width = width;
+    button->height = height;
     button->text = text;
     return (button);
 }
 
 void destroy_button(t_button *button)
 {
-    if (button) {
-        destroy_position(button->position);
-        destroy_rect(button->body);
+    if (button != NULL) {
         free(button);
     }
 }
