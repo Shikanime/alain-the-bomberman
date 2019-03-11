@@ -18,5 +18,5 @@ typedef struct  s_game
     t_env       *env;
 }               t_game;
 
-t_game  *create_game(const char *address, uint16_t port);
+t_game  *create_game();
 void    destroy_game(t_game *game);

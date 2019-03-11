@@ -11,9 +11,13 @@ int enter_server_loop(t_socket *s);
 
 int             run_server(uint16_t port)
 {
-    t_socket*   server = create_server_socket(port);
+    t_socket*   server = create_socket();
 
     if (!server) {
+        fprintf(stderr, "Fail to create the server: %s\n", strerror(errno));
+        return (EXIT_FAILURE);
+    }
+    if (connect_server(server, port) < 0) {
         fprintf(stderr, "Fail to start the server with exception: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }

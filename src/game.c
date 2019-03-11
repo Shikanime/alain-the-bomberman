@@ -5,12 +5,12 @@
 #include "./model/entity/hero.h"
 #include "./game/env.h"
 
-t_game      *create_game(const char *address, uint16_t port)
+t_game      *create_game()
 {
     t_game  *game = malloc(sizeof(t_game));
 
     if (game) {
-        game->client = create_client_socket(address, port);
+        game->client = create_socket();
         if (!game->client) {
             destroy_game(game);
             return (NULL);

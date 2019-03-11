@@ -32,10 +32,14 @@ int             run_client(const char *address, uint16_t port)
                                 SCREEN_WIDTH, SCREEN_HEIGHT,
                                 SDL_WINDOW_SHOWN);
     if (!window) {
-        fprintf(stderr, "Game window fail to start: %s\n", strerror(errno));
+        fprintf(stderr, "Game window fail to start: %s\n", SDL_GetError());
         return (EXIT_FAILURE);
     }
-    game = create_game(address, port);
+    game = create_game();
+    if (connect_client(game->client, address, port) < 0) {
+        fprintf(stderr, "Fail to connect server: %s\n", strerror(errno));
+        return (EXIT_FAILURE);
+    }
     if (!game) {
         fprintf(stderr, "Game instance fail to start: %s\n", strerror(errno));
         SDL_DestroyWindow(window);
