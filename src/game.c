@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "./game.h"
 #include "./net.h"
-#include "./action/placement.h"
+#include "./system/bomberman.h"
 
 t_game      *create_game()
 {
