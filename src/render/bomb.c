@@ -6,25 +6,25 @@
 
 SDL_Texture   *load_bomb(SDL_Renderer *renderer)
 {
-  SDL_Surface *img = NULL;
-  SDL_Texture *texture = NULL;
+    SDL_Surface *img = NULL;
+    SDL_Texture *texture = NULL;
 
-  img = IMG_Load("assets/bomb.png");
-  if (!img) {
-    fprintf(stderr, "Image fail to load: %s", strerror(errno));
-  }
-  texture = SDL_CreateTextureFromSurface(renderer, img);
-  if (!texture) {
-    fprintf(stderr, "Image fail to load: %s", strerror(errno));
-  }
-  SDL_FreeSurface(img);
-  return texture;
+    img = IMG_Load("assets/bomb.png");
+    if (!img) {
+        fprintf(stderr, "Image fail to load: %s", strerror(errno));
+    }
+    texture = SDL_CreateTextureFromSurface(renderer, img);
+    if (!texture) {
+        fprintf(stderr, "Image fail to load: %s", strerror(errno));
+    }
+    SDL_FreeSurface(img);
+    return texture;
 }
 
-void        render_bomb(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
+void            render_bomb(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
 {
-  SDL_Rect  dest = {x, y, 40, 40};
+    SDL_Rect    rectangle = {x, y, 40, 40};
 
-  SDL_RenderCopy(renderer, texture, NULL, &dest);
-  SDL_RenderDrawRect(renderer, &dest);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderDrawRect(renderer, &rectangle);
 }
