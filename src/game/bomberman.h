@@ -2,12 +2,16 @@
 
 #include <stdlib.h>
 
-typedef struct      s_bomberman
+typedef enum {
+    BOMBERNMAN_BASIC
+}   e_bomberman_skin;
+
+
+typedef struct          s_bomberman
 {
-    size_t          width;
-    size_t          height;
-    unsigned int    speed;
-}                   t_bomberman;
+    e_bomberman_skin    skin;
+    unsigned int        speed;
+}                       t_bomberman;
 
 t_bomberman *create_bomberman();
 void        destroy_bomberman(t_bomberman *bomberman);

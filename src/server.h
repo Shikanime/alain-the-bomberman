@@ -5,6 +5,6 @@
 typedef enum {
     SERVER_HALT,
     SERVER_RUN
-} e_server_status;
+}   e_server_status;
 
 int run_server(uint16_t port);

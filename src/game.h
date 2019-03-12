@@ -24,4 +24,4 @@ typedef struct      s_game
 
 t_game  *create_game();
 void    destroy_game(t_game *game);
-int     sync_player(t_game *game, char *address, uint16_t port);
+int     sync_player(t_game *game, const char *address, uint16_t port);

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "./bomb.h"
 
-t_bomb      *create_bomb()
+t_bomb      *create_bomb(e_bomb_type type)
 {
     t_bomb  *bomb = malloc(sizeof(t_bomb));
 
@@ -10,6 +10,7 @@ t_bomb      *create_bomb()
         perror("Fail to allocate bomb");
         return (NULL);
     }
+    bomb->type = type;
     return (bomb);
 }
 

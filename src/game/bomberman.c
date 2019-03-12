@@ -10,6 +10,7 @@ t_bomberman     *create_bomberman()
         perror("Fail to allocate bomberman");
         return (NULL);
     }
+    bomberman->skin = BOMBERNMAN_BASIC;
     bomberman->speed = 40;
     return (bomberman);
 }

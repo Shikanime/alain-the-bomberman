@@ -52,7 +52,7 @@ void        handle_game_inputs(SDL_Event *event, t_game *game)
                     break;
 
                 case SDLK_SPACE:
-                    if (allahu_akbar(game->map, game->player->x, game->player->y)) {
+                    if (allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE), game->player->x, game->player->y)) {
                         sprintf(res_buff, "spawn 2 %d %d", game->player->x, game->player->y);
                         send_event(game->server, res_buff);
                     }
@@ -83,7 +83,7 @@ void        handle_server_events(t_game *game, char *packet)
                 send_event(game->server, discorvery_packet);
             }
         } else if (sscanf(packet, "spawn 2 %02d %02d", &x, &y) == 2) {
-            place_bomb(game->map, create_bomb(), x, y);
+            allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE), game->player->x, game->player->y);
         }
     } else if (strncmp(packet, "mv", 2) == 0) {
         if (sscanf(packet, "mv 1 %02d %02d", &x, &y) == 2) {
