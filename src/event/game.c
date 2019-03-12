@@ -83,7 +83,7 @@ void        handle_server_events(t_game *game, char *packet)
                 send_event(game->server, discorvery_packet);
             }
         } else if (sscanf(packet, "spawn 2 %02d %02d", &x, &y) == 2) {
-            allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE), game->player->x, game->player->y);
+            allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE), x, y);
         }
     } else if (strncmp(packet, "mv", 2) == 0) {
         if (sscanf(packet, "mv 1 %02d %02d", &x, &y) == 2) {
