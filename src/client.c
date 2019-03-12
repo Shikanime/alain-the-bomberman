@@ -27,7 +27,7 @@ int             run_client(const char *address, uint16_t port)
         fprintf(stderr, "Game window fail to start: %s\n", SDL_GetError());
         return (EXIT_FAILURE);
     }
-    game = create_game((SCREEN_WIDTH / 20) - 1, (SCREEN_HEIGHT / 20) - 1);
+    game = create_game((SCREEN_WIDTH / 20), (SCREEN_HEIGHT / 20));
     if (!game) {
         fprintf(stderr, "Game game fail to start: %s\n", strerror(errno));
         SDL_DestroyWindow(window);
@@ -73,9 +73,9 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
             current_time = SDL_GetTicks();
             if (current_time - previous_time > mspf) {
                 previous_time = current_time;
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                 SDL_RenderClear(renderer);
                 render_entites(renderer, ressource, game->map);
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                 SDL_RenderPresent(renderer);
             } else {
                 SDL_Delay(mspf - (current_time - previous_time));
