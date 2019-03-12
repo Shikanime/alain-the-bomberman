@@ -51,6 +51,9 @@ int             run_client(const char *address, uint16_t port)
 int                 enter_game_loop(SDL_Window *window, t_game *game)
 {
     SDL_Renderer    *renderer = NULL;
+    Uint32          current_time = 0;
+    Uint32          previous_time = 0;
+    Uint32          mspf = 1000 / 60;
     t_ressource     *ressource = NULL;
 
     renderer = SDL_CreateRenderer(window, -1, 0);
@@ -64,15 +67,20 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
         return (-1);
     }
     while (game->state != GAME_EXIT) {
-        SDL_RenderClear(renderer);
         if (game->state == GAME_RUN) {
             sub_sever_inputs(game);
             sub_inputs(game);
-            render_entites(renderer, ressource, game->map);
+            current_time = SDL_GetTicks();
+            if (current_time - previous_time > mspf) {
+                previous_time = current_time;
+                SDL_RenderClear(renderer);
+                render_entites(renderer, ressource, game->map);
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_RenderPresent(renderer);
+            } else {
+                SDL_Delay(mspf - (current_time - previous_time));
+            }
         }
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderPresent(renderer);
-    	SDL_Delay(100);
     }
     destroy_ressource(ressource);
     SDL_DestroyRenderer(renderer);
