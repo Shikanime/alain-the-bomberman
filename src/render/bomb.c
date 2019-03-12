@@ -26,5 +26,4 @@ void            render_bomb(SDL_Renderer *renderer, SDL_Texture *texture, int x,
     SDL_Rect    rectangle = {x, y, 20, 20};
 
     SDL_RenderCopy(renderer, texture, NULL, &rectangle);
-    SDL_RenderDrawRect(renderer, &rectangle);
 }
