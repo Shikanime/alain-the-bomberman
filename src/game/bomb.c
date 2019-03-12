@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "./bomb.h"
 
-t_bomb      *create_bomb(e_bomb_type type)
+t_bomb      *create_bomb(e_bomb_type type, Uint32 drop_time)
 {
     t_bomb  *bomb = malloc(sizeof(t_bomb));
 
@@ -11,6 +11,7 @@ t_bomb      *create_bomb(e_bomb_type type)
         return (NULL);
     }
     bomb->type = type;
+    bomb->drop_time = drop_time;
     return (bomb);
 }
 
@@ -18,6 +19,5 @@ void destroy_bomb(t_bomb *bomb)
 {
     if (bomb != NULL) {
         free(bomb);
-        bomb = NULL;
     }
 }

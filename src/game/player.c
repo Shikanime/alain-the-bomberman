@@ -18,6 +18,5 @@ void destroy_player(t_player *player)
 {
     if (player != NULL) {
         free(player);
-        player = NULL;
     }
 }

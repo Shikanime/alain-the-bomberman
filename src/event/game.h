@@ -4,4 +4,4 @@
 #include "../game.h"
 
 void handle_game_inputs(SDL_Event *event, t_game *game);
-void handle_server_events(t_game *game, char *packet);
+void handle_game_server_events(t_game *game, char *packet);

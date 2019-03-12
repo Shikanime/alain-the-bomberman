@@ -3,6 +3,8 @@
 #include "./net.h"
 #include "./system/bomberman.h"
 
+int read_from_socket(int fd, char (*msg_buff)[20]);
+
 void broadcast_event(t_conn *conn, int sender_fd, const char *event)
 {
     for (int i = 0; i < FD_SETSIZE; i++) {
@@ -57,4 +59,43 @@ int conn_server_mode(t_conn *conn, uint16_t port)
     FD_ZERO(&conn->active_set);
     FD_SET(conn->fd, &conn->active_set);
     return (1);
+}
+
+int     handle_join(t_conn *s)
+{
+    int fd = 0;
+
+    fd = accept(s->fd, (struct sockaddr*)&s->addr, &s->len);
+    if (fd < 0) {
+        return (-1);
+    }
+    FD_SET(fd, &s->active_set);
+    printf("New connection on %d\n", fd);
+    return (1);
+}
+
+int         handle_packet(t_conn *s, int fd)
+{
+    char    msg_buff[20];
+
+    if (read_from_socket(fd, &msg_buff) < 0) {
+        close_connection(s, fd);
+        return (-1);
+    }
+    broadcast_event(s, fd, msg_buff);
+    printf("Message received from %d of content: %.*s", fd, 20, msg_buff);
+    return (1);
+}
+
+int         read_from_socket(int fd, char (*msg_buff)[20])
+{
+    ssize_t n = recv(fd, msg_buff, 20, 0);
+
+    if (n < 0) {
+    return (-1);
+    }
+    if (n == 0) {
+        return (-1);
+    }
+    return 0;
 }

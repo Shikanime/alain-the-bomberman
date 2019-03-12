@@ -39,6 +39,5 @@ void destroy_map(t_map *map)
             free(map->matrix);
         }
         free(map);
-        map = NULL;
     }
 }

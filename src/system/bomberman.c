@@ -6,7 +6,7 @@ bool allahu_akbar(t_map *map, t_bomb *bomb, int x, int y)
     if (map->matrix[y][x].bomberman == NULL) {
         return false;
     }
-    return place_bomb(map, bomb, x, y);
+    return bomb_have_been_plant(map, bomb, x, y);
 }
 
 bool place_bomberman(t_map *map, t_bomberman *bomberman, int x, int y)

@@ -52,8 +52,8 @@ void        handle_game_inputs(SDL_Event *event, t_game *game)
                     break;
 
                 case SDLK_SPACE:
-                    if (allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE), game->player->x, game->player->y)) {
-                        sprintf(res_buff, "spawn 2 %d %d", game->player->x, game->player->y);
+                    if (allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE, SDL_GetTicks()), game->player->x, game->player->y)) {
+                        sprintf(res_buff, "spawn 2 1 %02d %02d", game->player->x, game->player->y);
                         send_event(game->server, res_buff);
                     }
                     break;
@@ -68,10 +68,11 @@ void        handle_game_inputs(SDL_Event *event, t_game *game)
     }
 }
 
-void        handle_server_events(t_game *game, char *packet)
+void        handle_game_server_events(t_game *game, char *packet)
 {
     int     x = 0;
     int     y = 0;
+    int     type = 0;
 
     if (strncmp(packet, "spawn", 5) == 0) {
         if (sscanf(packet, "spawn 1 %02d %02d", &x, &y) == 2) {
@@ -82,8 +83,8 @@ void        handle_server_events(t_game *game, char *packet)
                 sprintf(discorvery_packet, "spawn 1 %02d %02d", game->player->x, game->player->y);
                 send_event(game->server, discorvery_packet);
             }
-        } else if (sscanf(packet, "spawn 2 %02d %02d", &x, &y) == 2) {
-            allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE), x, y);
+        } else if (sscanf(packet, "spawn 2 %02d %02d %02d", &type, &x, &y) == 2) {
+            allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE, SDL_GetTicks()), x, y);
         }
     } else if (strncmp(packet, "mv", 2) == 0) {
         if (sscanf(packet, "mv 1 %02d %02d", &x, &y) == 2) {

@@ -37,7 +37,7 @@ int                 enter_server_loop(t_conn *s)
     e_server_status  state = SERVER_RUN;
 
     while (state != SERVER_HALT) {
-        sub_client_inputs(s);
+        sub_client_events(s);
     }
     return (1);
 }

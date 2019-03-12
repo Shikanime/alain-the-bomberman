@@ -68,8 +68,9 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
     }
     while (game->state != GAME_EXIT) {
         if (game->state == GAME_RUN) {
-            sub_sever_inputs(game);
-            sub_inputs(game);
+            sub_internal_events(game);
+            sub_sever_events(game);
+            sub_input_events(game);
             current_time = SDL_GetTicks();
             if (current_time - previous_time > mspf) {
                 previous_time = current_time;
