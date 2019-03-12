@@ -11,7 +11,7 @@ void render_entites(SDL_Renderer *renderer, t_ressource *resssource, t_map *map)
             if (map->matrix[i][j].bomberman != NULL) {
                 render_bomberman(renderer, NULL, (int)j * 20, (int)i * 20);
             } else if (map->matrix[i][j].bomb != NULL) {
-                render_bomb(renderer, NULL, (int)j * 20, (int)i * 20);
+                render_bomb(renderer, resssource->bomb, (int)j * 20, (int)i * 20);
             }
         }
     }
