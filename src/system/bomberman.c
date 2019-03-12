@@ -32,6 +32,9 @@ bool spawn_bomberman(t_map *map, t_bomberman *bomberman, int x, int y)
 
 bool move_bomberman(t_map *map, int sx, int sy, int dx, int dy)
 {
+    if (map->matrix[dy][dx].env == ENV_WALL) {
+        return false;
+    }
     if (map->matrix[sy][sx].bomberman == NULL) {
         return false;
     }

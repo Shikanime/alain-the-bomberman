@@ -4,10 +4,16 @@
 #include "./bomb.h"
 #include "./bomberman.h"
 
+typedef enum {
+    ENV_GROUND,
+    ENV_WALL
+}   e_env_type;
+
 typedef struct  s_cell
 {
     t_bomberman *bomberman;
     t_bomb      *bomb;
+    e_env_type  env;
 }               t_cell;
 
 typedef struct  s_map

@@ -17,6 +17,11 @@ t_map       *create_map(size_t width, size_t height)
         for (size_t j = 0; j < width; j++) {
             map->matrix[i][j].bomb = NULL;
             map->matrix[i][j].bomberman = NULL;
+            if (i == 0 || j == 0 || i == height || j == width) {
+                map->matrix[i][j].env = ENV_WALL;
+            } else {
+                map->matrix[i][j].env = ENV_GROUND;
+            }
         }
     }
     return (map);

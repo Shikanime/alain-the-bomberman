@@ -27,7 +27,7 @@ int             run_client(const char *address, uint16_t port)
         fprintf(stderr, "Game window fail to start: %s\n", SDL_GetError());
         return (EXIT_FAILURE);
     }
-    game = create_game();
+    game = create_game((SCREEN_WIDTH / 20) - 1, (SCREEN_HEIGHT / 20) - 1);
     if (!game) {
         fprintf(stderr, "Game game fail to start: %s\n", strerror(errno));
         SDL_DestroyWindow(window);

@@ -4,7 +4,7 @@
 #include "./net.h"
 #include "./system/bomberman.h"
 
-t_game      *create_game()
+t_game      *create_game(size_t width, size_t height)
 {
     t_game  *game = malloc(sizeof(t_game));
 
@@ -13,8 +13,8 @@ t_game      *create_game()
         return (NULL);
     }
     game->state = GAME_RUN;
-    game->map = create_map(16, 12);
-    game->player = create_player(16, 12);
+    game->map = create_map(width, height);
+    game->player = create_player(width, height);
     game->server = create_conn();
     return game;
 }

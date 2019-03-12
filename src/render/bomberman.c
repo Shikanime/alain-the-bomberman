@@ -4,7 +4,7 @@ void            render_bomberman(SDL_Renderer *renderer, SDL_Texture *texture, i
 {
     (void) texture;
 
-    SDL_Rect    rectangle = {x, y, 40, 40};
+    SDL_Rect    rectangle = {x, y, 20, 20};
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
     SDL_RenderDrawRect(renderer, &rectangle);

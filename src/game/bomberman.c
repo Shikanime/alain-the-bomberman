@@ -11,7 +11,7 @@ t_bomberman     *create_bomberman()
         return (NULL);
     }
     bomberman->skin = BOMBERNMAN_BASIC;
-    bomberman->speed = 40;
+    bomberman->speed = 20;
     return (bomberman);
 }
 

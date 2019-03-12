@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "./bomb.h"
 
-SDL_Texture   *load_bomb(SDL_Renderer *renderer)
+SDL_Texture   *load_map(SDL_Renderer *renderer)
 {
     SDL_Surface *img = NULL;
     SDL_Texture *texture = NULL;
@@ -21,7 +21,7 @@ SDL_Texture   *load_bomb(SDL_Renderer *renderer)
     return texture;
 }
 
-void            render_bomb(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
+void            render_ground(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
 {
     SDL_Rect    rectangle = {x, y, 20, 20};
 
