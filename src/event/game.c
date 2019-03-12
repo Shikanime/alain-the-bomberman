@@ -72,7 +72,6 @@ void        handle_game_server_events(t_game *game, char *packet)
 {
     int     x = 0;
     int     y = 0;
-    int     type = 0;
 
     if (strncmp(packet, "spawn", 5) == 0) {
         if (sscanf(packet, "spawn 1 %02d %02d", &x, &y) == 2) {
@@ -83,7 +82,7 @@ void        handle_game_server_events(t_game *game, char *packet)
                 sprintf(discorvery_packet, "spawn 1 %02d %02d", game->player->x, game->player->y);
                 send_event(game->server, discorvery_packet);
             }
-        } else if (sscanf(packet, "spawn 2 %02d %02d %02d", &type, &x, &y) == 2) {
+        } else if (sscanf(packet, "spawn 2 1 %02d %02d", &x, &y) == 2) {
             allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE, SDL_GetTicks()), x, y);
         }
     } else if (strncmp(packet, "mv", 2) == 0) {
