@@ -14,6 +14,7 @@ void        handle_game_inputs(SDL_Event *event, t_game *game)
         case SDL_KEYDOWN:
             switch (event->key.keysym.sym) {
                 case SDLK_UP:
+                    // TODO: fix side effect with prediction function
                     if (move_bomberman_up(game->map, game->player)) {
                         sprintf(res_buff, "mv up %d %d", game->player->x, game->player->y);
                         send_event(game->server, res_buff);
