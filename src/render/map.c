@@ -28,3 +28,11 @@ void            render_ground(SDL_Renderer *renderer, SDL_Texture *texture, int 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderDrawRect(renderer, &rectangle);
 }
+
+void            render_wall(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
+{
+    SDL_Rect    rectangle = {x, y, 20, 20};
+
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_RenderDrawRect(renderer, &rectangle);
+}

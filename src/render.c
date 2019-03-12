@@ -3,6 +3,7 @@
 #include "./render/bomberman.h"
 #include "./render/bomb.h"
 #include "./render/button.h"
+#include "./render/map.h"
 
 void render_entites(SDL_Renderer *renderer, t_ressource *resssource, t_map *map)
 {
@@ -12,6 +13,10 @@ void render_entites(SDL_Renderer *renderer, t_ressource *resssource, t_map *map)
                 render_bomberman(renderer, NULL, (int)j * 20, (int)i * 20);
             } else if (map->matrix[i][j].bomb != NULL) {
                 render_bomb(renderer, resssource->bomb, (int)j * 20, (int)i * 20);
+            } else if (map->matrix[i][j].env == ENV_GROUND) {
+                render_ground(renderer, NULL, (int)j * 20, (int)i * 20);
+            } else if (map->matrix[i][j].env == ENV_WALL) {
+                render_wall(renderer, NULL, (int)j * 20, (int)i * 20);
             }
         }
     }
