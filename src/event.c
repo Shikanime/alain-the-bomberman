@@ -31,22 +31,14 @@ void            sub_input_events(t_game *game)
 }
 
 void sub_internal_events(t_game *game) {
-    for (size_t i = 0; i < game->map->height; i++) {
-        for (size_t j = 0; j < game->map->width; j++) {
-            if (game->map->matrix[i][j].bomb != NULL) {
-                if (SDL_GetTicks() - game->map->matrix[i][j].bomb->drop_time > 5000) {
-                    bomb_explosion(game->map, game->map->matrix[i][j].bomb, j, i);
-                }
-            }
-        }
-    }
+    handle_game_internal_events(game);
 }
 
 void        sub_sever_events(t_game *game)
 {
-    char    packet_msg_buff[20];
+    char    packet_msg_buff[FIXED_PACKET_LENGHT];
 
-    if (recv(game->server->fd, packet_msg_buff, 20, MSG_DONTWAIT) >= 0) {
+    if (recv(game->server->fd, packet_msg_buff, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
         switch (game->state) {
             case GAME_RUN:
                 handle_game_server_events(game, packet_msg_buff);

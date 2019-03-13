@@ -30,7 +30,7 @@ void destroy_game(t_game *game)
 
 int         sync_player(t_game *game, const char *address, uint16_t port)
 {
-    char    packet[20];
+    char    packet[FIXED_PACKET_LENGHT];
 
     if (conn_client_mode(game->server, address, port) < 0) {
         return (-1);

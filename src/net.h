@@ -3,6 +3,8 @@
 #include <arpa/inet.h>
 #include "./net/conn.h"
 
+#define FIXED_PACKET_LENGHT 20
+
 void broadcast_event(t_conn *s, int sender_fd, const char *event);
 void close_connection(t_conn *s, int fd);
 void send_event(t_conn *conn, const char *command);

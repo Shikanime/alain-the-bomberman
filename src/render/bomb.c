@@ -23,7 +23,8 @@ SDL_Texture   *load_bomb(SDL_Renderer *renderer)
 
 void            render_bomb(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
 {
-    SDL_Rect    rectangle = {x, y, 20, 20};
+    SDL_Rect    rectangle = {x * FIXED_BOMB_WIDTH, y * FIXED_BOMB_HEIGHT,
+                             FIXED_BOMB_WIDTH, FIXED_BOMB_HEIGHT};
 
     SDL_RenderCopy(renderer, texture, NULL, &rectangle);
 }

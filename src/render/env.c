@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include "./bomb.h"
+#include "./env.h"
 
 SDL_Texture   *load_map(SDL_Renderer *renderer)
 {
@@ -23,7 +24,9 @@ SDL_Texture   *load_map(SDL_Renderer *renderer)
 
 void            render_ground(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
 {
-    SDL_Rect    rectangle = {x, y, 20, 20};
+    SDL_Rect    rectangle = {x * FIXED_ENV_WIDTH, y * FIXED_ENV_HEIGHT,
+                             FIXED_ENV_WIDTH, FIXED_ENV_HEIGHT};
+
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderDrawRect(renderer, &rectangle);
@@ -31,7 +34,8 @@ void            render_ground(SDL_Renderer *renderer, SDL_Texture *texture, int 
 
 void            render_wall(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)
 {
-    SDL_Rect    rectangle = {x, y, 20, 20};
+    SDL_Rect    rectangle = {x * FIXED_ENV_WIDTH, y * FIXED_ENV_HEIGHT,
+                             FIXED_ENV_WIDTH, FIXED_ENV_HEIGHT};
 
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_RenderDrawRect(renderer, &rectangle);

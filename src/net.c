@@ -3,14 +3,14 @@
 #include "./net.h"
 #include "./system/bomberman.h"
 
-int read_from_socket(int fd, char (*msg_buff)[20]);
+int read_from_socket(int fd, char (*msg_buff)[FIXED_PACKET_LENGHT]);
 
 void broadcast_event(t_conn *conn, int sender_fd, const char *event)
 {
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (FD_ISSET(i, &conn->active_set)) {
             if (i != conn->fd && i != sender_fd) {
-                send(i, event, 20, MSG_DONTWAIT);
+                send(i, event, FIXED_PACKET_LENGHT, MSG_DONTWAIT);
             }
         }
     }
@@ -24,10 +24,10 @@ void close_connection(t_conn *conn, int fd)
 
 void        send_event(t_conn *conn, const char *command)
 {
-    char    buff[20];
+    char    buff[FIXED_PACKET_LENGHT];
 
-    sprintf(buff, "%-*s\n", 20 - 2, command);
-    send(conn->fd, buff, 20, MSG_DONTWAIT);
+    sprintf(buff, "%-*s\n", FIXED_PACKET_LENGHT - 2, command);
+    send(conn->fd, buff, FIXED_PACKET_LENGHT, MSG_DONTWAIT);
 }
 
 int conn_client_mode(t_conn *conn, const char *address, uint16_t port)
@@ -76,20 +76,20 @@ int     handle_join(t_conn *s)
 
 int         handle_packet(t_conn *s, int fd)
 {
-    char    msg_buff[20];
+    char    msg_buff[FIXED_PACKET_LENGHT];
 
     if (read_from_socket(fd, &msg_buff) < 0) {
         close_connection(s, fd);
         return (-1);
     }
     broadcast_event(s, fd, msg_buff);
-    printf("Message received from %d of content: %.*s", fd, 20, msg_buff);
+    printf("Message received from %d of content: %.*s", fd, FIXED_PACKET_LENGHT, msg_buff);
     return (1);
 }
 
-int         read_from_socket(int fd, char (*msg_buff)[20])
+int         read_from_socket(int fd, char (*msg_buff)[FIXED_PACKET_LENGHT])
 {
-    ssize_t n = recv(fd, msg_buff, 20, 0);
+    ssize_t n = recv(fd, msg_buff, FIXED_PACKET_LENGHT, 0);
 
     if (n < 0) {
     return (-1);
