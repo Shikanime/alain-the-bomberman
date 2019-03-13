@@ -44,10 +44,6 @@ else
     SILENCER := @
 endif
 
-ifeq ($(DEBUG_BUILD), 1)
-    CFLAGS +=-DDEBUG_BUILD -fsanitize=address -g
-endif
-
 # Compilation command
 
 .PHONY: all
@@ -61,11 +57,7 @@ exec: $(OUTNAME)
 
 # Compilator files
 
-ifeq ($(TEST_BUILD), 1)
-    SRCS := $(shell find $(ROOTDIR)/$(SRCDIR) -name "*.$(TYPE)" -type f | cut -sd / -f 3- | tr '\n' ' ')
-else
-    SRCS := $(shell find $(ROOTDIR)/$(SRCDIR) ! -name '*.test.$(TYPE)' -name "*.$(TYPE)" -type f | cut -sd / -f 3- | tr '\n' ' ')
-endif
+SRCS := $(shell find $(ROOTDIR)/$(SRCDIR) -name "*.$(TYPE)" -type f | cut -sd / -f 3- | tr '\n' ' ')
 OBJS := $(patsubst %, $(OBJDIR)/%, $(SRCS:$(TYPE)=o))
 DEPS :=$(patsubst %.$(TYPE), %.d, $(SRCS))
 
