@@ -79,6 +79,9 @@ void handle_game_internal_events(t_game *game)
             }
         }
     }
+    if (game->map->matrix[game->player->y][game->player->x].bomberman == NULL) {
+        game->state = GAME_OVER;
+    }
 }
 
 void        handle_game_server_events(t_game *game, char *packet)

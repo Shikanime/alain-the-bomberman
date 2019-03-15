@@ -11,7 +11,8 @@ typedef enum {
     GAME_RUN,
     GAME_PAUSE,
     GAME_SKIP,
-    GAME_MENU
+    GAME_MENU,
+    GAME_OVER
 }   e_game_state;
 
 typedef struct      s_game
