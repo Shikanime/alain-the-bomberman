@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "./player.h"
 
-t_player        *create_player(size_t width, size_t height)
+t_player        *create_player(int x, int y)
 {
     t_player    *player = malloc(sizeof(t_player));
 
@@ -9,8 +9,8 @@ t_player        *create_player(size_t width, size_t height)
         perror("Fail to allocate player");
         return (NULL);
     }
-    player->x = rand() % width;
-    player->y = rand() % height;
+    player->x = x;
+    player->y = y;
     return (player);
 }
 

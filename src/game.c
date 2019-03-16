@@ -7,6 +7,8 @@
 t_game      *create_game(size_t width, size_t height)
 {
     t_game  *game = malloc(sizeof(t_game));
+    int     x = rand() % width;
+    int     y = rand() % height;
 
     if (game == NULL) {
         perror("Fail to allocate game");
@@ -14,7 +16,11 @@ t_game      *create_game(size_t width, size_t height)
     }
     game->state = GAME_RUN;
     game->map = create_map(width, height);
-    game->player = create_player(width, height);
+    while (game->map->matrix[y][x].env != ENV_GROUND){
+        y = rand() % height;
+        x = rand() % width;
+    }
+    game->player = create_player(x, y);
     game->server = create_conn();
     return game;
 }

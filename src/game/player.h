@@ -8,5 +8,5 @@ typedef struct  s_player
     int         y;
 }               t_player;
 
-t_player    *create_player(size_t width, size_t height);
+t_player    *create_player(int x, int y);
 void        destroy_player(t_player *player);
