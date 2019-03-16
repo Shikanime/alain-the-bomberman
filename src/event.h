@@ -2,6 +2,7 @@
 
 #include "./game.h"
 
+void sub_navigation_events(t_game *game);
 void sub_input_events(t_game *game);
 void sub_internal_events(t_game *game);
 void sub_sever_events(t_game *game);

@@ -2,6 +2,7 @@
 #include "./event.h"
 #include "./event/menu.h"
 #include "./event/game.h"
+#include "./event/navigation.h"
 #include "./net.h"
 #include "./net/conn.h"
 #include "./system/bomb.h"
@@ -28,6 +29,11 @@ void            sub_input_events(t_game *game)
             }
         }
     }
+}
+
+void sub_navigation_events(t_game *game)
+{
+    handle_navigation_events(game);
 }
 
 void sub_internal_events(t_game *game) {

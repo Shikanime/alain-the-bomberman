@@ -67,20 +67,29 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
         return (-1);
     }
     while (game->state != GAME_EXIT) {
-        if (game->state == GAME_RUN) {
-            sub_internal_events(game);
-            sub_sever_events(game);
-            sub_input_events(game);
-            current_time = SDL_GetTicks();
-            if (current_time - previous_time > mspf) {
-                previous_time = current_time;
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                SDL_RenderClear(renderer);
-                render_entites(renderer, ressource, game->map);
-                SDL_RenderPresent(renderer);
-            } else {
-                SDL_Delay(mspf - (current_time - previous_time));
-            }
+        switch (game->state) {
+            case GAME_MENU:
+                break;
+
+            case GAME_RUN:
+                sub_internal_events(game);
+                sub_sever_events(game);
+                sub_input_events(game);
+                current_time = SDL_GetTicks();
+                if (current_time - previous_time > mspf) {
+                    previous_time = current_time;
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                    SDL_RenderClear(renderer);
+                    render_entites(renderer, ressource, game->map);
+                    SDL_RenderPresent(renderer);
+                } else {
+                    SDL_Delay(mspf - (current_time - previous_time));
+                }
+                break;
+
+            default:
+                sub_navigation_events(game);
+                break;
         }
     }
     destroy_ressource(ressource);
