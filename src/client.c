@@ -19,7 +19,7 @@ t_client        *create_client(size_t width, size_t height)
         perror("Fail to allocate client");
         return (NULL);
     }
-    client->state = CLIENT_INIT;
+    client->state = CLIENT_GAME_INIT;
     client->map = create_map(width, height);
     client->player = create_player((int)width / 2, (int)height / 2);
     client->server = create_conn();
@@ -85,29 +85,18 @@ int                 enter_client_loop(SDL_Window *window, t_client *client)
         return (-1);
     }
     while (client->state != CLIENT_EXIT) {
-        switch (client->state) {
-            case CLIENT_MENU:
-                break;
-
-            case CLIENT_RUN:
-                sub_game_events(client);
-                sub_server_packets(client);
-                sub_input_events(client);
-                current_time = SDL_GetTicks();
-                if (current_time - previous_time > mspf) {
-                    previous_time = current_time;
-                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                    SDL_RenderClear(renderer);
-                    render_entites(renderer, ressource, client->map);
-                    SDL_RenderPresent(renderer);
-                } else {
-                    SDL_Delay(mspf - (current_time - previous_time));
-                }
-                break;
-
-            default:
-                sub_navigation_events(client);
-                break;
+        sub_server_packets(client);
+        sub_inputs(client);
+        sub_events(client);
+        current_time = SDL_GetTicks();
+        if (current_time - previous_time > mspf) {
+            previous_time = current_time;
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+            render_entites(renderer, ressource, client->map);
+            SDL_RenderPresent(renderer);
+        } else {
+            SDL_Delay(mspf - (current_time - previous_time));
         }
     }
     destroy_ressource(ressource);

@@ -8,12 +8,12 @@
 #include "./net/conn.h"
 
 typedef enum {
-    CLIENT_INIT,
-    CLIENT_RUN,
-    CLIENT_PAUSE,
-    CLIENT_OVER,
     CLIENT_EXIT,
-    CLIENT_MENU
+    CLIENT_MENU,
+    CLIENT_GAME_INIT,
+    CLIENT_GAME,
+    CLIENT_GAME_PAUSE,
+    CLIENT_GAME_OUT
 }   e_client_state;
 
 typedef struct      t_client {
@@ -21,6 +21,7 @@ typedef struct      t_client {
     t_conn          *server;
     t_map           *map;
     t_player        *player;
+    int             player_nb;
 }                   t_client;
 
 t_client    *create_client(size_t width, size_t height);

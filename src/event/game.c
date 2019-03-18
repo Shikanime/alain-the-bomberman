@@ -70,63 +70,21 @@ void        handle_game_inputs(SDL_Event *event, t_client *client)
 
 void handle_game_events(t_client *client)
 {
-    for (size_t i = 0; i < client->map->height; i++) {
-        for (size_t j = 0; j < client->map->width; j++) {
-            if (client->map->matrix[i][j].bomb != NULL) {
-                if (SDL_GetTicks() - client->map->matrix[i][j].bomb->drop_time > 5000) {
-                    bomb_explosion(client->map, client->map->matrix[i][j].bomb, (int)j, (int)i);
-                }
-            }
-        }
-    }
     if (client->map->matrix[client->player->y][client->player->x].bomberman == NULL) {
-        client->state = CLIENT_OVER;
+        client->state = CLIENT_GAME_OUT;
     }
 }
 
-void    handle_game_server_init(t_client *client, char *packet)
+void handle_game_packets(t_client *client, char *packet)
 {
-    int x = 0;
-    int y = 0;
-
-    if (strncmp(packet, "spawn", 5) == 0) {
-        if (sscanf(packet, "spawn 1 %02d %02d", &x, &y) == 2) {
-            if (place_bomberman(client->map, create_bomberman(), x, y)) {
-                client->player->x = x;
-                client->player->y = y;
+    switch (client->state) {
+        case CLIENT_GAME_INIT:
+            if (strncmp(packet, "ready", 5) == 0) {
+                client->state = CLIENT_GAME;
             }
-        }
-    } else if (strncmp(packet, "terrain", 7) == 0) {
-        if (sscanf(packet, "terrain 1 %02d %02d", &x, &y) == 2) {
-            client->map->matrix[y][x].env = ENV_WALL;
-        }
-    } else if (strncmp(packet, "ready", 5) == 0) {
-        client->state = CLIENT_RUN;
-    }
-}
+            break;
 
-void        handle_game_server_packets(t_client *client, char *packet)
-{
-    int     x = 0;
-    int     y = 0;
-
-    if (strncmp(packet, "spawn", 5) == 0) {
-        if (sscanf(packet, "spawn 1 %02d %02d", &x, &y) == 2) {
-            if (place_bomberman(client->map, create_bomberman(), x, y)) {
-                printf("A new player have been connected at %d:%d\n", x, y);
-            }
-        } else if (sscanf(packet, "spawn 2 1 %02d %02d", &x, &y) == 2) {
-            allahu_akbar(client->map, create_bomb(BOMB_BASIC_TYPE, SDL_GetTicks()), x, y);
-        }
-    } else if (strncmp(packet, "mv", 2) == 0) {
-        if (sscanf(packet, "mv 1 %02d %02d", &x, &y) == 2) {
-            move_bomberman(client->map, x, y, x, compute_bomberman_up_move(client->map, y));
-        } else if (sscanf(packet, "mv 2 %02d %02d", &x, &y) == 2) {
-            move_bomberman(client->map, x, y, x, compute_bomberman_down_move(client->map, y));
-        } else if (sscanf(packet, "mv 3 %02d %02d", &x, &y) == 2) {
-            move_bomberman(client->map, x, y, compute_bomberman_left_move(client->map, x), y);
-        } else if (sscanf(packet, "mv 4 %02d %02d", &x, &y) == 2) {
-            move_bomberman(client->map, x, y, compute_bomberman_right_move(client->map, x), y);
-        }
+        default:
+            break;
     }
 }

@@ -87,8 +87,6 @@ int         handle_packet(t_server *server, int fd)
         close_connection(server->conn, fd);
         return (-1);
     }
-    printf("%s\n", msg_buff);
-    fflush(stdout);
     broadcast_packet(server->conn, fd, msg_buff);
     printf("Message received from %d of content: %.*s", fd, FIXED_PACKET_LENGHT, msg_buff);
     return (1);

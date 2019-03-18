@@ -23,10 +23,12 @@ t_server        *create_server(size_t width, size_t height)
     }
     server->state = SERVER_RUN;
     server->map = create_map(width, height);
-
     for (size_t i = 0; i < height; i++) {
         for (size_t j = 0; j < width; j++) {
             if (i == 0 || j == 0 || i == height - 1 || j == width - 1) {
+                server->map->matrix[i][j].env = ENV_WALL;
+            }
+            if (rand() % 100 >= 80) {
                 server->map->matrix[i][j].env = ENV_WALL;
             }
         }

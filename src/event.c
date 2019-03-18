@@ -2,12 +2,16 @@
 #include "./event.h"
 #include "./event/menu.h"
 #include "./event/game.h"
+#include "./event/mv.h"
+#include "./event/spawn.h"
+#include "./event/explosion.h"
+#include "./event/terrain.h"
 #include "./event/navigation.h"
 #include "./net.h"
 #include "./net/conn.h"
 #include "./system/bomb.h"
 
-void            sub_input_events(t_client *client)
+void            sub_inputs(t_client *client)
 {
     SDL_Event   event;
 
@@ -20,7 +24,7 @@ void            sub_input_events(t_client *client)
                     handle_menu_inputs(&event, client);
                     break;
 
-                case CLIENT_RUN:
+                case CLIENT_GAME:
                     handle_game_inputs(&event, client);
                     break;
 
@@ -31,15 +35,15 @@ void            sub_input_events(t_client *client)
     }
 }
 
-void        sub_navigation_events(t_client *client)
+void sub_events(t_client *client)
 {
-    char    packet_msg_buff[FIXED_PACKET_LENGHT];
-
-    switch (client->state)
-    {
-        case CLIENT_INIT:
-            if (recv(client->server->fd, packet_msg_buff, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
-                handle_game_server_init(client, packet_msg_buff);
+    switch (client->state) {
+        case CLIENT_GAME:
+            handle_game_events(client);
+            for (size_t i = 0; i < client->map->height; i++) {
+                for (size_t j = 0; j < client->map->width; j++) {
+                    handle_explosion_events(client, j, i);
+                }
             }
             break;
 
@@ -49,23 +53,15 @@ void        sub_navigation_events(t_client *client)
     }
 }
 
-void sub_game_events(t_client *client) {
-    handle_game_events(client);
-}
-
 void        sub_server_packets(t_client *client)
 {
-    char    packet_msg_buff[FIXED_PACKET_LENGHT];
+    char    packet[FIXED_PACKET_LENGHT];
 
-    if (recv(client->server->fd, packet_msg_buff, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
-        switch (client->state) {
-            case CLIENT_RUN:
-                handle_game_server_packets(client, packet_msg_buff);
-                break;
-
-            default:
-                break;
-        }
+    if (recv(client->server->fd, packet, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
+        handle_game_packets(client, packet);
+        handle_mv_packets(client, packet);
+        handle_spawn_packets(client, packet);
+        handle_terrain_packets(client, packet);
     }
 }
 
