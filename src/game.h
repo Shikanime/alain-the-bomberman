@@ -8,6 +8,7 @@
 
 typedef enum {
     GAME_EXIT,
+    GAME_INIT,
     GAME_RUN,
     GAME_PAUSE,
     GAME_SKIP,
@@ -25,4 +26,3 @@ typedef struct      s_game
 
 t_game  *create_game(size_t width, size_t height);
 void    destroy_game(t_game *game);
-int     sync_player(t_game *game, const char *address, uint16_t port);

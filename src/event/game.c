@@ -19,7 +19,7 @@ void        handle_game_inputs(SDL_Event *event, t_game *game)
                     y = compute_bomberman_up_move(game->map, game->player->y);
                     if (move_bomberman(game->map, game->player->x, game->player->y, game->player->x, y)) {
                         sprintf(packet, "mv 1 %d %d", game->player->x, game->player->y);
-                        send_event(game->server, packet);
+                        send_event(game->server->fd, packet);
                         game->player->y = y;
                     }
                     break;
@@ -28,7 +28,7 @@ void        handle_game_inputs(SDL_Event *event, t_game *game)
                     y = compute_bomberman_down_move(game->map, game->player->y);
                     if (move_bomberman(game->map, game->player->x, game->player->y, game->player->x, y)) {
                         sprintf(packet, "mv 2 %d %d", game->player->x, game->player->y);
-                        send_event(game->server, packet);
+                        send_event(game->server->fd, packet);
                         game->player->y = y;
                     }
                     break;
@@ -37,7 +37,7 @@ void        handle_game_inputs(SDL_Event *event, t_game *game)
                     x = compute_bomberman_left_move(game->map, game->player->x);
                     if (move_bomberman(game->map, game->player->x, game->player->y, x, game->player->y)) {
                         sprintf(packet, "mv 3 %d %d", game->player->x, game->player->y);
-                        send_event(game->server, packet);
+                        send_event(game->server->fd, packet);
                         game->player->x = x;
                     }
                     break;
@@ -46,7 +46,7 @@ void        handle_game_inputs(SDL_Event *event, t_game *game)
                     x = compute_bomberman_right_move(game->map, game->player->x);
                     if (move_bomberman(game->map, game->player->x, game->player->y, x, game->player->y)) {
                         sprintf(packet, "mv 4 %d %d", game->player->x, game->player->y);
-                        send_event(game->server, packet);
+                        send_event(game->server->fd, packet);
                         game->player->x = x;
                     }
                     break;
@@ -54,7 +54,7 @@ void        handle_game_inputs(SDL_Event *event, t_game *game)
                 case SDLK_SPACE:
                     if (allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE, SDL_GetTicks()), game->player->x, game->player->y)) {
                         sprintf(packet, "spawn 2 1 %02d %02d", game->player->x, game->player->y);
-                        send_event(game->server, packet);
+                        send_event(game->server->fd, packet);
                     }
                     break;
 
@@ -84,6 +84,27 @@ void handle_game_internal_events(t_game *game)
     }
 }
 
+void    handle_game_server_init(t_game *game, char *packet)
+{
+    int x = 0;
+    int y = 0;
+
+    if (strncmp(packet, "spawn", 5) == 0) {
+        if (sscanf(packet, "spawn 1 %02d %02d", &x, &y) == 2) {
+            if (place_bomberman(game->map, create_bomberman(), x, y)) {
+                game->player->x = x;
+                game->player->y = y;
+                game->state = GAME_RUN;
+                printf("A new player have been connected at %d:%d\n", x, y);
+            }
+        }
+    } else if (strncmp(packet, "spawn", 5) == 0) {
+        if (sscanf(packet, "terrain 1 %02d %02d", &x, &y) == 2) {
+            game->map->matrix[y][x].env = ENV_WALL;
+        }
+    }
+}
+
 void        handle_game_server_events(t_game *game, char *packet)
 {
     int     x = 0;
@@ -96,7 +117,7 @@ void        handle_game_server_events(t_game *game, char *packet)
 
                 printf("A new player have been connected at %d:%d\n", x, y);
                 sprintf(discorvery_packet, "spawn 1 %02d %02d", game->player->x, game->player->y);
-                send_event(game->server, discorvery_packet);
+                send_event(game->server->fd, discorvery_packet);
             }
         } else if (sscanf(packet, "spawn 2 1 %02d %02d", &x, &y) == 2) {
             allahu_akbar(game->map, create_bomb(BOMB_BASIC_TYPE, SDL_GetTicks()), x, y);

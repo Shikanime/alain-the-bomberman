@@ -7,10 +7,7 @@
 #include "./event.h"
 #include "./render.h"
 #include "./ressource.h"
-
-const char *SCREEN_TITLE = "Bomberman";
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+#include "./config.h"
 
 int enter_game_loop(SDL_Window *window, t_game *game);
 
@@ -33,7 +30,7 @@ int             run_client(const char *address, uint16_t port)
         SDL_DestroyWindow(window);
         return (EXIT_FAILURE);
     }
-    if (sync_player(game, address, port) < 0) {
+    if (conn_client_mode(game->server, address, port) < 0) {
         fprintf(stderr, "Fail to connect server: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }
