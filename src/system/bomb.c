@@ -15,7 +15,7 @@ bool bomb_explosion(t_map *map, t_bomb *bomb, int x, int y)
         return false;
     }
     for (int i = x - 2; i < x + (2 * 2 + 1); i++) {
-        if (i < 0 || i >= map->width) {
+        if (i < 0 || i >= (int)map->width) {
             continue;
         }
         if (i == x) {
@@ -30,7 +30,7 @@ bool bomb_explosion(t_map *map, t_bomb *bomb, int x, int y)
         }
     }
     for (int i = y - 2; i < y + (2 * 2 + 1); i++) {
-        if (i < 0 || i >= map->height) {
+        if (i < 0 || i >= (int)map->height) {
             continue;
         }
         if (i == y) {

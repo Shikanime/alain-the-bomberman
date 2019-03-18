@@ -1,5 +1,5 @@
 #pragma once
 
-#include "../game.h"
+#include "../client.h"
 
-void handle_navigation_events(t_game *game);
+void handle_navigation_events(t_client *client);

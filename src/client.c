@@ -3,18 +3,42 @@
 #include <errno.h>
 #include "./client.h"
 #include "./net.h"
-#include "./game.h"
 #include "./event.h"
 #include "./render.h"
 #include "./ressource.h"
 #include "./config.h"
+#include "./system/bomberman.h"
 
-int enter_game_loop(SDL_Window *window, t_game *game);
+int enter_client_loop(SDL_Window *window, t_client *client);
+
+t_client        *create_client(size_t width, size_t height)
+{
+    t_client    *client = malloc(sizeof(t_client));
+
+    if (client == NULL) {
+        perror("Fail to allocate client");
+        return (NULL);
+    }
+    client->state = CLIENT_INIT;
+    client->map = create_map(width, height);
+    client->player = create_player((int)width / 2, (int)height / 2);
+    client->server = create_conn();
+    return client;
+}
+
+void destroy_client(t_client *client)
+{
+    if (client != NULL) {
+        destroy_map(client->map);
+        destroy_conn(client->server);
+        free(client);
+    }
+}
 
 int             run_client(const char *address, uint16_t port)
 {
     SDL_Window  *window = NULL;
-    t_game      *game = NULL;
+    t_client    *client = NULL;
 
     window = SDL_CreateWindow(SCREEN_TITLE,
                                 SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -24,28 +48,25 @@ int             run_client(const char *address, uint16_t port)
         fprintf(stderr, "Game window fail to start: %s\n", SDL_GetError());
         return (EXIT_FAILURE);
     }
-    game = create_game((SCREEN_WIDTH / 20), (SCREEN_HEIGHT / 20));
-    if (!game) {
-        fprintf(stderr, "Game game fail to start: %s\n", strerror(errno));
-        SDL_DestroyWindow(window);
+    client = create_client(SCREEN_WIDTH / 20, SCREEN_HEIGHT / 20);
+    if (!client) {
+        fprintf(stderr, "Game client fail to start: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }
-    if (conn_client_mode(game->server, address, port) < 0) {
+    if (conn_client_mode(client->server, address, port) < 0) {
         fprintf(stderr, "Fail to connect server: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }
-    if (enter_game_loop(window, game) < 0) {
+    if (enter_client_loop(window, client) < 0) {
         fprintf(stderr, "Game quit with exception: %s\n", strerror(errno));
-        destroy_game(game);
-        SDL_DestroyWindow(window);
         return (EXIT_FAILURE);
     }
-    destroy_game(game);
+    destroy_client(client);
     SDL_DestroyWindow(window);
     return (EXIT_SUCCESS);
 }
 
-int                 enter_game_loop(SDL_Window *window, t_game *game)
+int                 enter_client_loop(SDL_Window *window, t_client *client)
 {
     SDL_Renderer    *renderer = NULL;
     Uint32          current_time = 0;
@@ -63,21 +84,21 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
         SDL_DestroyRenderer(renderer);
         return (-1);
     }
-    while (game->state != GAME_EXIT) {
-        switch (game->state) {
-            case GAME_MENU:
+    while (client->state != CLIENT_EXIT) {
+        switch (client->state) {
+            case CLIENT_MENU:
                 break;
 
-            case GAME_RUN:
-                sub_internal_events(game);
-                sub_sever_events(game);
-                sub_input_events(game);
+            case CLIENT_RUN:
+                sub_game_events(client);
+                sub_server_packets(client);
+                sub_input_events(client);
                 current_time = SDL_GetTicks();
                 if (current_time - previous_time > mspf) {
                     previous_time = current_time;
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                     SDL_RenderClear(renderer);
-                    render_entites(renderer, ressource, game->map);
+                    render_entites(renderer, ressource, client->map);
                     SDL_RenderPresent(renderer);
                 } else {
                     SDL_Delay(mspf - (current_time - previous_time));
@@ -85,7 +106,7 @@ int                 enter_game_loop(SDL_Window *window, t_game *game)
                 break;
 
             default:
-                sub_navigation_events(game);
+                sub_navigation_events(client);
                 break;
         }
     }

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "./game.h"
-#include "./game/map.h"
+#include "./client.h"
+#include "./server.h"
 
-void sub_navigation_events(t_game *game);
-void sub_input_events(t_game *game);
-void sub_internal_events(t_game *game);
-void sub_sever_events(t_game *game);
-void sub_client_events(t_conn *s, t_map *map);
+void sub_navigation_events(t_client *client);
+void sub_input_events(t_client *client);
+void sub_game_events(t_client *client);
+void sub_server_packets(t_client *client);
+void sub_client_packets(t_server *server);

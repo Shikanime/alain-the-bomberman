@@ -4,15 +4,15 @@
 #include "./system/bomberman.h"
 
 int read_from_socket(int fd, char (*msg_buff)[FIXED_PACKET_LENGHT]);
-void sync_player(t_conn *server, int fd, t_map *map);
-void sync_map(int fd, t_map *map);
+void sync_player(t_server *server, int fd);
+void sync_map(t_server *server, int fd);
 
-void broadcast_event(t_conn *conn, int sender_fd, const char *event)
+void broadcast_packet(t_conn *conn, int sender_fd, const char *packet)
 {
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (FD_ISSET(i, &conn->active_set)) {
             if (i != conn->fd && i != sender_fd) {
-                send(i, event, FIXED_PACKET_LENGHT, MSG_DONTWAIT);
+                send(i, packet, FIXED_PACKET_LENGHT, MSG_DONTWAIT);
             }
         }
     }
@@ -24,11 +24,11 @@ void close_connection(t_conn *conn, int fd)
     FD_CLR(fd, &conn->active_set);
 }
 
-void        send_event(int fd, const char *command)
+void        send_packet(int fd, const char *packet)
 {
     char    buff[FIXED_PACKET_LENGHT];
 
-    sprintf(buff, "%-*s\n", FIXED_PACKET_LENGHT - 2, command);
+    sprintf(buff, "%-*s\n", FIXED_PACKET_LENGHT - 2, packet);
     send(fd, buff, FIXED_PACKET_LENGHT, MSG_DONTWAIT);
 }
 
@@ -63,30 +63,33 @@ int conn_server_mode(t_conn *conn, uint16_t port)
     return (1);
 }
 
-int     handle_join(t_conn *server, t_map *map)
+int     handle_join(t_server *server)
 {
     int fd = 0;
 
-    fd = accept(server->fd, (struct sockaddr*)&server->addr, &server->len);
+    fd = accept(server->conn->fd, (struct sockaddr*)&server->conn->addr, &server->conn->len);
     if (fd < 0) {
         return (-1);
     }
-    FD_SET(fd, &server->active_set);
-    sync_map(fd, map);
-    sync_player(server, fd, map);
+    FD_SET(fd, &server->conn->active_set);
+    sync_map(server, fd);
+    sync_player(server, fd);
+    send_packet(fd, "ready");
     printf("New connection on %d\n", fd);
     return (1);
 }
 
-int         handle_packet(t_conn *server, int fd)
+int         handle_packet(t_server *server, int fd)
 {
     char    msg_buff[FIXED_PACKET_LENGHT];
 
     if (read_from_socket(fd, &msg_buff) < 0) {
-        close_connection(server, fd);
+        close_connection(server->conn, fd);
         return (-1);
     }
-    broadcast_event(server, fd, msg_buff);
+    printf("%s\n", msg_buff);
+    fflush(stdout);
+    broadcast_packet(server->conn, fd, msg_buff);
     printf("Message received from %d of content: %.*s", fd, FIXED_PACKET_LENGHT, msg_buff);
     return (1);
 }
@@ -104,7 +107,7 @@ int         read_from_socket(int fd, char (*msg_buff)[FIXED_PACKET_LENGHT])
     return 0;
 }
 
-void        sync_player(t_conn *server, int fd, t_map *map)
+void        sync_player(t_server *server, int fd)
 {
     char        packet[FIXED_PACKET_LENGHT];
     int         x = 0;
@@ -112,26 +115,28 @@ void        sync_player(t_conn *server, int fd, t_map *map)
     t_bomberman *player = create_bomberman();
 
     do {
-        x = rand() % map->width;
-        y = rand() % map->height;
-    } while (!place_bomberman(map, player, x, y));
+        x = rand() % (int)server->map->width;
+        y = rand() % (int)server->map->height;
+    } while (!place_bomberman(server->map, player, x, y));
     sprintf(packet, "spawn 1 %02d %02d", x, y);
-    send_event(fd, packet);
-    broadcast_event(server, fd, packet);
+    send_packet(fd, packet);
+    broadcast_packet(server->conn, fd, packet);
 }
 
-void        sync_map(int fd, t_map *map)
+void        sync_map(t_server *server, int fd)
 {
     char    packet[FIXED_PACKET_LENGHT];
-    int     x = 0;
-    int     y = 0;
 
-    for (size_t i = 0; i < map->height; i++) {
-        for (size_t j = 0; j < map->width; j++) {
-            switch (map->matrix[i][j].env) {
+    for (size_t i = 0; i < server->map->height; i++) {
+        for (size_t j = 0; j < server->map->width; j++) {
+            if (server->map->matrix[i][j].bomberman) {
+                sprintf(packet, "spawn 1 %02d %02d", (int)j, (int)i);
+                send_packet(fd, packet);
+            }
+            switch (server->map->matrix[i][j].env) {
                 case ENV_WALL:
-                    sprintf(packet, "terrain 1 %02d %02d", x, y);
-                    send_event(fd, packet);
+                    sprintf(packet, "terrain 1 %02d %02d", (int)j, (int)i);
+                    send_packet(fd, packet);
                     break;
 
                 default:

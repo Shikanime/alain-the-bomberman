@@ -7,21 +7,21 @@
 #include "./net/conn.h"
 #include "./system/bomb.h"
 
-void            sub_input_events(t_game *game)
+void            sub_input_events(t_client *client)
 {
     SDL_Event   event;
 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
-            game->state = GAME_EXIT;
+            client->state = CLIENT_EXIT;
         } else {
-            switch (game->state) {
-                case GAME_MENU:
-                    handle_menu_inputs(&event, game);
+            switch (client->state) {
+                case CLIENT_MENU:
+                    handle_menu_inputs(&event, client);
                     break;
 
-                case GAME_RUN:
-                    handle_game_inputs(&event, game);
+                case CLIENT_RUN:
+                    handle_game_inputs(&event, client);
                     break;
 
                 default:
@@ -31,37 +31,36 @@ void            sub_input_events(t_game *game)
     }
 }
 
-void        sub_navigation_events(t_game *game)
+void        sub_navigation_events(t_client *client)
 {
     char    packet_msg_buff[FIXED_PACKET_LENGHT];
 
-    switch (game->state)
+    switch (client->state)
     {
-        case GAME_INIT:
-
-            if (recv(game->server->fd, packet_msg_buff, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
-                handle_game_server_init(game, packet_msg_buff);
+        case CLIENT_INIT:
+            if (recv(client->server->fd, packet_msg_buff, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
+                handle_game_server_init(client, packet_msg_buff);
             }
             break;
 
         default:
-            handle_navigation_events(game);
+            handle_navigation_events(client);
             break;
     }
 }
 
-void sub_internal_events(t_game *game) {
-    handle_game_internal_events(game);
+void sub_game_events(t_client *client) {
+    handle_game_events(client);
 }
 
-void        sub_sever_events(t_game *game)
+void        sub_server_packets(t_client *client)
 {
     char    packet_msg_buff[FIXED_PACKET_LENGHT];
 
-    if (recv(game->server->fd, packet_msg_buff, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
-        switch (game->state) {
-            case GAME_RUN:
-                handle_game_server_events(game, packet_msg_buff);
+    if (recv(client->server->fd, packet_msg_buff, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
+        switch (client->state) {
+            case CLIENT_RUN:
+                handle_game_server_packets(client, packet_msg_buff);
                 break;
 
             default:
@@ -69,14 +68,15 @@ void        sub_sever_events(t_game *game)
         }
     }
 }
-void sub_client_events(t_conn *server, t_map *map)
+
+void sub_client_packets(t_server *server)
 {
-    server->read_set = server->active_set;
-    if (select(FD_SETSIZE, &server->read_set, NULL, NULL, NULL) >= 0) {
+    server->conn->read_set = server->conn->active_set;
+    if (select(FD_SETSIZE, &server->conn->read_set, NULL, NULL, NULL) >= 0) {
         for (int i = 0; i < FD_SETSIZE; i++) {
-            if (FD_ISSET(i, &server->read_set)) {
-                if (i == server->fd) {
-                    if (handle_join(server, map) < 0) {
+            if (FD_ISSET(i, &server->conn->read_set)) {
+                if (i == server->conn->fd) {
+                    if (handle_join(server) < 0) {
                         printf("Fail to join socket of fd: %d\n", i);
                     }
                 } else {

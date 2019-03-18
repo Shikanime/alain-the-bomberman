@@ -1,9 +1,9 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "../game.h"
+#include "../client.h"
 
-void handle_game_inputs(SDL_Event *event, t_game *game);
-void handle_game_internal_events(t_game *game);
-void handle_game_server_init(t_game *game, char *packet);
-void handle_game_server_events(t_game *game, char *packet);
+void handle_game_inputs(SDL_Event *event, t_client *client);
+void handle_game_events(t_client *client);
+void handle_game_server_init(t_client *client, char *packet);
+void handle_game_server_packets(t_client *client, char *packet);

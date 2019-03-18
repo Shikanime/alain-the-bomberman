@@ -1,8 +1,8 @@
 #include "./navigation.h"
 
-void handle_navigation_events(t_game *game)
+void handle_navigation_events(t_client *client)
 {
-    if (game->state == GAME_OVER) {
-        game->state = GAME_EXIT;
+    if (client->state == CLIENT_OVER) {
+        client->state = CLIENT_EXIT;
     }
 }
