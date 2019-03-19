@@ -68,13 +68,6 @@ void        handle_game_inputs(SDL_Event *event, t_client *client)
     }
 }
 
-void handle_game_events(t_client *client)
-{
-    if (client->map->matrix[client->player->y][client->player->x].bomberman == NULL) {
-        client->state = CLIENT_GAME_OUT;
-    }
-}
-
 void handle_game_packets(t_client *client, char *packet)
 {
     switch (client->state) {

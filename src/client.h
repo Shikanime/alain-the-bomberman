@@ -12,8 +12,7 @@ typedef enum {
     CLIENT_MENU,
     CLIENT_GAME_INIT,
     CLIENT_GAME,
-    CLIENT_GAME_PAUSE,
-    CLIENT_GAME_OUT
+    CLIENT_GAME_PAUSE
 }   e_client_state;
 
 typedef struct      t_client {

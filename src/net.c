@@ -13,6 +13,8 @@ void broadcast_packet(t_conn *conn, int sender_fd, const char *packet)
         if (FD_ISSET(i, &conn->active_set)) {
             if (i != conn->fd && i != sender_fd) {
                 send(i, packet, FIXED_PACKET_LENGHT, MSG_DONTWAIT);
+            } else if (sender_fd == conn->fd) {
+                send(i, packet, FIXED_PACKET_LENGHT, MSG_DONTWAIT);
             }
         }
     }
@@ -63,18 +65,18 @@ int conn_server_mode(t_conn *conn, uint16_t port)
     return (1);
 }
 
-int     handle_join(t_server *server)
+int         handle_join(t_server *server)
 {
-    int fd = 0;
+    int     fd = 0;
 
     fd = accept(server->conn->fd, (struct sockaddr*)&server->conn->addr, &server->conn->len);
     if (fd < 0) {
         return (-1);
     }
     FD_SET(fd, &server->conn->active_set);
-    sync_map(server, fd);
     sync_player(server, fd);
-    send_packet(fd, "ready");
+    sync_map(server, fd);
+    server->player_nb++;
     printf("New connection on %d\n", fd);
     return (1);
 }

@@ -21,8 +21,9 @@ t_client        *create_client(size_t width, size_t height)
     }
     client->state = CLIENT_GAME_INIT;
     client->map = create_map(width, height);
-    client->player = create_player((int)width / 2, (int)height / 2);
     client->server = create_conn();
+    client->player = NULL;
+    client->player_nb = 0;
     return client;
 }
 
