@@ -13,10 +13,8 @@ void render_entites(SDL_Renderer *renderer, t_ressource *resssource, t_map *map)
                 render_bomberman(renderer, resssource->bomberman[map->matrix[i][j].bomberman->skin], (int)j, (int)i);
             } else if (map->matrix[i][j].bomb != NULL) {
                 render_bomb(renderer, resssource->bomb, (int)j, (int)i);
-            } else if (map->matrix[i][j].env == ENV_GROUND) {
-                render_ground(renderer, NULL, (int)j, (int)i);
-            } else if (map->matrix[i][j].env == ENV_WALL) {
-                render_wall(renderer, NULL, (int)j, (int)i);
+            } else {
+                render_env(renderer, resssource->env[map->matrix[i][j].env], (int)j, (int)i);
             }
         }
     }

@@ -6,6 +6,7 @@ typedef struct  s_ressource
 {
   SDL_Texture   *bomb;
   SDL_Texture   **bomberman;
+  SDL_Texture   **env;
 }               t_ressource;
 
 t_ressource *create_ressource();
