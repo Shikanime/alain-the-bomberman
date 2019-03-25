@@ -10,7 +10,7 @@ void render_entites(SDL_Renderer *renderer, t_ressource *resssource, t_map *map)
     for (size_t i = 0; i < map->height; i++) {
         for (size_t j = 0; j < map->width; j++) {
             if (map->matrix[i][j].bomberman != NULL) {
-                render_bomberman(renderer, NULL, (int)j, (int)i);
+                render_bomberman(renderer, resssource->bomberman[map->matrix[i][j].bomberman->skin], (int)j, (int)i);
             } else if (map->matrix[i][j].bomb != NULL) {
                 render_bomb(renderer, resssource->bomb, (int)j, (int)i);
             } else if (map->matrix[i][j].env == ENV_GROUND) {

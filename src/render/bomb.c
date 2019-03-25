@@ -1,24 +1,14 @@
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL.h>
 #include <errno.h>
 #include <stdio.h>
 #include "./bomb.h"
 
-SDL_Texture   *load_bomb(SDL_Renderer *renderer)
+int load_bomb(SDL_Renderer *renderer, t_ressource *ressource)
 {
-    SDL_Surface *img = NULL;
-    SDL_Texture *texture = NULL;
-
-    img = IMG_Load("assets/bomb.png");
-    if (!img) {
-        fprintf(stderr, "Image fail to load: %s", strerror(errno));
+    ressource->bomb = load_image(renderer, "assets/bomb.png");
+    if (ressource->bomberman == NULL) {
+        return (-1);
     }
-    texture = SDL_CreateTextureFromSurface(renderer, img);
-    if (!texture) {
-        fprintf(stderr, "Image fail to load: %s", strerror(errno));
-    }
-    SDL_FreeSurface(img);
-    return texture;
+    return (0);
 }
 
 void            render_bomb(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y)

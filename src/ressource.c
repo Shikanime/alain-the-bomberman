@@ -1,5 +1,7 @@
+#include <SDL2/SDL_image.h>
 #include "./ressource.h"
 #include "./render/bomb.h"
+#include "./render/bomberman.h"
 
 t_ressource     *create_ressource(SDL_Renderer *renderer)
 {
@@ -9,7 +11,8 @@ t_ressource     *create_ressource(SDL_Renderer *renderer)
         destroy_ressource(ressource);
         return (NULL);
     }
-    ressource->bomb = load_bomb(renderer);
+    load_bomb(renderer, ressource);
+    load_bomberman(renderer, ressource);
     return (ressource);
 }
 
@@ -18,4 +21,21 @@ void destroy_ressource(t_ressource *ressource)
   if (ressource) {
     free(ressource);
   }
+}
+
+SDL_Texture *load_image(SDL_Renderer *renderer, const char *path)
+{
+    SDL_Surface *img = NULL;
+    SDL_Texture *texture = NULL;
+
+    img = IMG_Load(path);
+    if (!img) {
+        return NULL;
+    }
+    texture = SDL_CreateTextureFromSurface(renderer, img);
+    if (!texture) {
+        return NULL;
+    }
+    SDL_FreeSurface(img);
+    return texture;
 }

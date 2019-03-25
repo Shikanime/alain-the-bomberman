@@ -3,7 +3,10 @@
 #include <stdlib.h>
 
 typedef enum {
-    BOMBERNMAN_BASIC
+    BOMBERNMAN_WHITE,
+    BOMBERNMAN_RED,
+    BOMBERNMAN_BLUE,
+    BOMBERNMAN_GREY
 }   e_bomberman_skin;
 
 
