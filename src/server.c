@@ -69,7 +69,7 @@ int             run_server(uint16_t port, int player_nb)
     return (EXIT_SUCCESS);
 }
 
-int                     enter_server_loop(t_server *server)
+int enter_server_loop(t_server *server)
 {
     while (server->state != SERVER_HALT) {
         server->conn->read_set = server->conn->active_set;

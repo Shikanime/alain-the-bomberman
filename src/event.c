@@ -41,7 +41,7 @@ void sub_events(t_client *client)
         case CLIENT_GAME:
             for (size_t i = 0; i < client->map->height; i++) {
                 for (size_t j = 0; j < client->map->width; j++) {
-                    handle_explosion_events(client, j, i);
+                    handle_explosion_events(client, (int)j, (int)i);
                 }
             }
             if (client->player_nb <= 1) {

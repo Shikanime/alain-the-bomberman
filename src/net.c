@@ -112,13 +112,13 @@ void        sync_player(t_server *server, int fd)
     char        packet[FIXED_PACKET_LENGHT];
     int         x = 0;
     int         y = 0;
-    t_bomberman *player = create_bomberman();
+    t_bomberman *player = create_bomberman(0);
 
     do {
         x = rand() % (int)server->map->width;
         y = rand() % (int)server->map->height;
     } while (!place_bomberman(server->map, player, x, y));
-    sprintf(packet, "spawn 1 %02d %02d", x, y);
+    sprintf(packet, "spawn 1 %d %02d %02d", player->skin, x, y);
     send_packet(fd, packet);
     broadcast_packet(server->conn, fd, packet);
 }
@@ -130,7 +130,7 @@ void        sync_map(t_server *server, int fd)
     for (size_t i = 0; i < server->map->height; i++) {
         for (size_t j = 0; j < server->map->width; j++) {
             if (server->map->matrix[i][j].bomberman) {
-                sprintf(packet, "spawn 1 %02d %02d", (int)j, (int)i);
+                sprintf(packet, "spawn 1 %d %02d %02d", server->map->matrix[i][j].bomberman->skin, (int)j, (int)i);
                 send_packet(fd, packet);
             }
             switch (server->map->matrix[i][j].env) {

@@ -16,5 +16,5 @@ typedef struct          s_bomberman
     unsigned int        speed;
 }                       t_bomberman;
 
-t_bomberman *create_bomberman();
+t_bomberman *create_bomberman(e_bomberman_skin skin);
 void        destroy_bomberman(t_bomberman *bomberman);

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "./bomberman.h"
 
-t_bomberman     *create_bomberman()
+t_bomberman     *create_bomberman(e_bomberman_skin skin)
 {
     t_bomberman *bomberman = malloc(sizeof(t_bomberman));
 
@@ -10,7 +10,7 @@ t_bomberman     *create_bomberman()
         perror("Fail to allocate bomberman");
         return (NULL);
     }
-    bomberman->skin = BOMBERNMAN_WHITE;
+    bomberman->skin = skin;
     bomberman->speed = 20;
     return (bomberman);
 }
