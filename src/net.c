@@ -112,7 +112,7 @@ void        sync_player(t_server *server, int fd)
     char        packet[FIXED_PACKET_LENGHT];
     int         x = 0;
     int         y = 0;
-    t_bomberman *player = create_bomberman(0);
+    t_bomberman *player = create_bomberman(server->player_nb % 4);
 
     do {
         x = rand() % (int)server->map->width;
