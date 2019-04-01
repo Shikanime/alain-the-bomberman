@@ -18,7 +18,8 @@
         "instance.h": "c",
         "map.h": "c",
         "player.h": "c",
-        "bomb.h": "c"
+        "bomb.h": "c",
+        "nav.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "svn.ignoreMissingSvnWarning": true

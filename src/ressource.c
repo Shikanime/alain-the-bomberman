@@ -2,6 +2,7 @@
 #include "./ressource.h"
 #include "./render/bomb.h"
 #include "./render/bomberman.h"
+#include "./render/button.h"
 #include "./render/env.h"
 
 t_ressource     *create_ressource(SDL_Renderer *renderer)
@@ -15,6 +16,7 @@ t_ressource     *create_ressource(SDL_Renderer *renderer)
     load_bomb(renderer, ressource);
     load_bomberman(renderer, ressource);
     load_env(renderer, ressource);
+    load_button(ressource);
     return (ressource);
 }
 
