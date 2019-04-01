@@ -67,7 +67,7 @@ CFLAGS += -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
 $(OUTNAME): $(OBJS)
-	$(SILENCER)$(CC) $(CFLAGS) -o $(OUTDIR)/$(OUTNAME) $^ -lSDL2 `sdl2-config --cflags --libs` -lSDL2_image
+	$(SILENCER)$(CC) $(CFLAGS) -o $(OUTDIR)/$(OUTNAME) $^ -lSDL2 `sdl2-config --cflags --libs` -lSDL2_image  -lSDL2_ttf
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.$(TYPE) $(DEPDIR)/%.d
 	$(SILENCER)mkdir -p $(shell dirname $@)

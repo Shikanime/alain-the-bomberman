@@ -19,11 +19,15 @@ t_client        *create_client(size_t width, size_t height)
         perror("Fail to allocate client");
         return (NULL);
     }
-    client->state = CLIENT_GAME_INIT;
+    client->state = CLIENT_MENU;
+    client->menu = create_menu();
+    client->nav = create_nav();
     client->map = create_map(width, height);
     client->server = create_conn();
     client->player = NULL;
-    client->player_nb = 0;
+    client->player_nb = 2;
+    client->address = "127.0.0.1";
+    client->port = 4234;
     return client;
 }
 
@@ -36,7 +40,7 @@ void destroy_client(t_client *client)
     }
 }
 
-int             run_client(const char *address, uint16_t port)
+int             run_client()
 {
     SDL_Window  *window = NULL;
     t_client    *client = NULL;
@@ -52,10 +56,6 @@ int             run_client(const char *address, uint16_t port)
     client = create_client(SCREEN_WIDTH / 20, SCREEN_HEIGHT / 20);
     if (!client) {
         fprintf(stderr, "Game client fail to start: %s\n", strerror(errno));
-        return (EXIT_FAILURE);
-    }
-    if (conn_client_mode(client->server, address, port) < 0) {
-        fprintf(stderr, "Fail to connect server: %s\n", strerror(errno));
         return (EXIT_FAILURE);
     }
     if (enter_client_loop(window, client) < 0) {
@@ -94,7 +94,7 @@ int                 enter_client_loop(SDL_Window *window, t_client *client)
             previous_time = current_time;
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
-            render_entites(renderer, ressource, client->map);
+            sub_renderer(client, renderer, ressource);
             SDL_RenderPresent(renderer);
         } else {
             SDL_Delay(mspf - (current_time - previous_time));

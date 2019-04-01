@@ -6,7 +6,6 @@
 #include "./event/spawn.h"
 #include "./event/explosion.h"
 #include "./event/terrain.h"
-#include "./event/navigation.h"
 #include "./net.h"
 #include "./net/conn.h"
 #include "./system/bomb.h"
@@ -50,7 +49,6 @@ void sub_events(t_client *client)
             break;
 
         default:
-            handle_navigation_events(client);
             break;
     }
 }
@@ -59,11 +57,20 @@ void        sub_server_packets(t_client *client)
 {
     char    packet[FIXED_PACKET_LENGHT];
 
-    if (recv(client->server->fd, packet, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
-        handle_spawn_packets(client, packet);
-        handle_terrain_packets(client, packet);
-        handle_mv_packets(client, packet);
-        handle_game_packets(client, packet);
+    switch (client->state)
+    {
+        case CLIENT_GAME:
+        case CLIENT_GAME_INIT:
+            if (recv(client->server->fd, packet, FIXED_PACKET_LENGHT, MSG_DONTWAIT) >= 0) {
+                handle_spawn_packets(client, packet);
+                handle_terrain_packets(client, packet);
+                handle_mv_packets(client, packet);
+                handle_game_packets(client, packet);
+            }
+            break;
+
+        default:
+            break;
     }
 }
 
