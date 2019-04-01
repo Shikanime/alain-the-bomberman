@@ -6,7 +6,8 @@
 
 typedef enum {
     ENV_GROUND,
-    ENV_WALL
+    ENV_WALL,
+    ENV_FIRE
 }   e_env_type;
 
 typedef struct  s_cell

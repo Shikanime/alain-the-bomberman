@@ -8,13 +8,17 @@
 
 int load_env(SDL_Renderer *renderer, t_ressource *ressource)
 {
-    ressource->env = calloc(2, sizeof(SDL_Texture*));
+    ressource->env = calloc(3, sizeof(SDL_Texture*));
     ressource->env[ENV_GROUND] = load_image(renderer, "assets/dirt.png");
     if (ressource->env[ENV_GROUND] == NULL) {
         return (-1);
     }
     ressource->env[ENV_WALL] = load_image(renderer, "assets/wall.png");
     if (ressource->env[ENV_WALL] == NULL) {
+        return (-1);
+    }
+    ressource->env[ENV_FIRE] = load_image(renderer, "assets/fire.png");
+    if (ressource->env[ENV_FIRE] == NULL) {
         return (-1);
     }
     return (0);
