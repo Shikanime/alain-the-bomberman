@@ -5,6 +5,7 @@
 #include "./event/mv.h"
 #include "./event/spawn.h"
 #include "./event/explosion.h"
+#include "./event/supply.h"
 #include "./event/terrain.h"
 #include "./net.h"
 #include "./net/conn.h"
@@ -41,6 +42,7 @@ void sub_events(t_client *client)
             for (size_t i = 0; i < client->map->height; i++) {
                 for (size_t j = 0; j < client->map->width; j++) {
                     handle_explosion_events(client, (int)j, (int)i);
+                    handle_provisioning_event(client, (int)j, (int)i);
                 }
             }
             if (client->player_nb <= 1) {

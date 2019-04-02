@@ -27,7 +27,7 @@ t_client        *create_client(size_t width, size_t height)
     client->player = NULL;
     client->player_nb = 2;
     client->address = "127.0.0.1";
-    client->port = 4234;
+    client->port = 3542;
     return client;
 }
 
