@@ -3,9 +3,10 @@
 bool bomb_have_been_plant(t_map *map, t_bomb *bomb, int x, int y)
 {
     if (map->matrix[y][x].bomb != NULL) {
-        return false;
+        return (false);
     }
     map->matrix[y][x].bomb = bomb;
+    map->matrix[y][x].bomberman->bomb_nb--;
     return true;
 }
 
