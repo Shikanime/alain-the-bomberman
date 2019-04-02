@@ -20,6 +20,6 @@ int start_server(t_client *client)
 
 void *detact_server_cb(void *nav)
 {
-    run_server(((t_client*) nav)->port, ((t_client*) nav)->player_nb);
+    run_server(((t_client*) nav)->port, ((t_client*) nav)->player_capacity);
     return NULL;
 }

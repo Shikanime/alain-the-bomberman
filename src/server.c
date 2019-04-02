@@ -35,7 +35,7 @@ t_server        *create_server(size_t width, size_t height, int player_nb)
     }
     server->conn = create_conn();
     server->player_nb = 0;
-    server->limit_player_nb = player_nb;
+    server->player_capacity = player_nb;
     return server;
 }
 

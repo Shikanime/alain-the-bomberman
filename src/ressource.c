@@ -32,7 +32,7 @@ SDL_Texture *load_image(SDL_Renderer *renderer, const char *path)
     SDL_Surface *img = NULL;
     SDL_Texture *texture = NULL;
 
-    img = SDL_DisplayFormatAlpha(IMG_Load(path));
+    img = IMG_Load(path);
     if (!img) {
         return NULL;
     }

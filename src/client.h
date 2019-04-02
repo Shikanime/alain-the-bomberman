@@ -29,6 +29,7 @@ typedef struct      t_client {
     char            *address;
     uint16_t        port;
     int             player_nb;
+    int             player_capacity;
 }                   t_client;
 
 t_client    *create_client(size_t width, size_t height);

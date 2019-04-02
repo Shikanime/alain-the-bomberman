@@ -16,9 +16,9 @@ void            render_button(SDL_Renderer *renderer, TTF_Font *font, const char
     SDL_Color   white = {255, 255, 255, 0};
 
     if (light) {
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
         SDL_RenderDrawRect(renderer, &rectangle);
     }
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
     SDL_RenderCopy(renderer, SDL_CreateTextureFromSurface(renderer, TTF_RenderText_Solid(font, text, white)), NULL, &rectangle);
 }

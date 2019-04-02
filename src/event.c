@@ -82,12 +82,12 @@ void sub_client_packets(t_server *server)
         for (int i = 0; i < FD_SETSIZE; i++) {
             if (FD_ISSET(i, &server->conn->read_set)) {
                 if (i == server->conn->fd) {
-                    if (server->player_nb < server->limit_player_nb) {
+                    if (server->player_nb < server->player_capacity) {
                         if (handle_join(server) < 0) {
                             printf("Fail to join socket of fd: %d\n", i);
                         }
                     }
-                    if (server->player_nb == server->limit_player_nb) {
+                    if (server->player_nb == server->player_capacity) {
                         char packet[FIXED_PACKET_LENGHT];
 
                         sprintf(packet, "ready");

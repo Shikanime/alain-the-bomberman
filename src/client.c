@@ -25,7 +25,8 @@ t_client        *create_client(size_t width, size_t height)
     client->map = create_map(width, height);
     client->server = create_conn();
     client->player = NULL;
-    client->player_nb = 2;
+    client->player_nb = 0;
+    client->player_capacity = 2;
     client->address = "127.0.0.1";
     client->port = 3542;
     return client;

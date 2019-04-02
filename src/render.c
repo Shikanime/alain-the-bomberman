@@ -24,8 +24,8 @@ void sub_renderer(t_client *client, SDL_Renderer *renderer, t_ressource *ressour
             break;
 
         case CLIENT_MENU:
-            render_button(renderer, ressource->font, "Join server", 200, 40, 220, 60, client->nav->cursor == JOIN_GAME ? true : false);
-            render_button(renderer, ressource->font, "Create server", 200, 40, 220, 100, client->nav->cursor == CREATE_GAME ? true : false);
+            render_button(renderer, ressource->font, "Join server", 200, 40, 220, 170, client->nav->cursor == JOIN_GAME ? true : false);
+            render_button(renderer, ressource->font, "Create server", 200, 40, 220, 250, client->nav->cursor == CREATE_GAME ? true : false);
             break;
 
         default:
